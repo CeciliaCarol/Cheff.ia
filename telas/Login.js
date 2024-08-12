@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebaseConfig'; // Certifique-se de importar o 'auth'
+
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos!');
@@ -16,7 +17,7 @@ export default function Login({ navigation }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert('Sucesso', 'Usuário logado com sucesso!');
-      // navigation.navigate('Home'); // Navega para a tela principal após o login
+      navigation.navigate('Home'); // Navega para a tela principal após o login
     } catch (error) {
       console.error('Erro ao fazer login:', error.message);
       Alert.alert('Erro', 'Não foi possível fazer login.');
