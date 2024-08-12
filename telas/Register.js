@@ -7,7 +7,7 @@ export default function Register({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  
   const handleRegister = async () => {
     if (!name || !email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos!');
@@ -28,8 +28,13 @@ export default function Register({ navigation }) {
       Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
       navigation.navigate('Login'); // Navega para a tela de login após o registro
     } catch (error) {
-      console.error('Erro ao registrar:', error.message);
-      Alert.alert('Erro', 'Não foi possível registrar o usuário.');
+      // **Aqui foi onde adicionei a verificação do erro específico**
+      if (error.code === 'auth/email-already-in-use') {  // **Linha adicionada**
+        Alert.alert('Erro', 'Este email já está em uso. Por favor, use outro email.');  // **Linha adicionada**
+      } else {
+        console.error('Erro ao registrar:', error.message);
+        Alert.alert('Erro', 'Não foi possível registrar o usuário.');
+      }
     }
   };
 
