@@ -57,6 +57,8 @@ const Home = ({ navigation }) => {
       <Text style={styles.welcome}>Bem-vindo à Tela Inicial!</Text>
       <Button title="Sair" onPress={handleLogout} />
       <Button title='Criar' onPress={() => navigation.navigate('Add')} />
+      <Button title="Minhas Receitas" onPress={() => navigation.navigate('Receitas')} />
+
       {loading ? (
         <Text>Carregando...</Text>
       ) : recipes.length > 0 ? (
