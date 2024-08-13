@@ -1,6 +1,6 @@
 // Register.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { auth, firestore, createUserWithEmailAndPassword, doc, setDoc } from '../firebaseConfig';
 
 export default function Register({ navigation }) {
@@ -61,6 +61,9 @@ export default function Register({ navigation }) {
         onChangeText={setPassword}
       />
       <Button title="Registrar" onPress={handleRegister} />
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>Já tem uma conta? Faça login</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -77,5 +80,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+  },
+  link: {
+    color: 'blue',
+    marginTop: 12,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
 });

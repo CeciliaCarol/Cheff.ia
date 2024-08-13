@@ -1,180 +1,104 @@
-// Home.js
-import React, { useState } from 'react';
-import { View, Text, Button, FlatList, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { auth } from '../firebaseConfig';
+import { db } from '../firebaseConfig';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 
-export default function Home() {
-  const [showForm, setShowForm] = useState(false);
-  const [recipeName, setRecipeName] = useState('');
-  const [recipeDescription, setRecipeDescription] = useState('');
+const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const userId = auth.currentUser?.uid; // ID do usuário autenticado
 
-  const handleCreateOrUpdateRecipe = () => {
-    if (editingIndex !== null) {
-      const updatedRecipes = recipes.map((recipe, index) =>
-        index === editingIndex ? { name: recipeName, description: recipeDescription } : recipe
-      );
-      setRecipes(updatedRecipes);
-      setEditingIndex(null);
-    } else {
-      setRecipes([...recipes, { name: recipeName, description: recipeDescription }]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
+      const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setRecipes(recipesList);
+      setLoading(false);
+    }, (error) => {
+      console.error('Erro ao buscar receitas: ', error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe(); // Cleanup the listener on component unmount
+  }, []);
+
+  const handleLogout = () => {
+    auth.signOut().then(() => navigation.navigate('Login'));
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'receitas', id));
+      console.log('Receita excluída com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir receita: ', error);
     }
-    setRecipeName('');
-    setRecipeDescription('');
-    setShowForm(false);
   };
 
-  const handleEditRecipe = (index) => {
-    setRecipeName(recipes[index].name);
-    setRecipeDescription(recipes[index].description);
-    setEditingIndex(index);
-    setShowForm(true);
-  };
-
-  const handleDeleteRecipe = (index) => {
-    setRecipes(recipes.filter((_, i) => i !== index));
-  };
+  const renderRecipeItem = ({ item }) => (
+    <View style={styles.recipeItem}>
+      <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
+      <Text>Ingredientes: {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Nenhum'}</Text>
+      <Text>Instruções: {item.instructions || 'Nenhuma'}</Text>
+      <Text>Tags: {item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
+      {item.userId === userId && (
+        <TouchableOpacity onPress={() => navigation.navigate('Edit', { recipeId: item.id })}>
+          <Text style={styles.editButton}>Editar</Text>
+        </TouchableOpacity>
+      )}
+      {item.userId === userId && (
+        <Button title="Excluir" onPress={() => handleDelete(item.id)} />
+      )}
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo!</Text>
-      <Text style={styles.welcomeMessage}>Seja bem-vindo ao aplicativo de receitas...</Text>
-      
-      <Image 
-        style={styles.image}
-        source={{ uri: 'https://example.com/recipe1.jpg' }} 
-      />
-      <Image 
-        style={styles.image}
-        source={{ uri: 'https://example.com/recipe2.jpg' }} 
-      />
-
-      <Button
-        title="Criar nova receita"
-        onPress={() => setShowForm(true)}
-      />
-
-      <FlatList
-        data={recipes}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.recipeItem}>
-            <Text style={styles.recipeName}>{item.name}</Text>
-            <Text>{item.description}</Text>
-            <View style={styles.buttons}>
-              <TouchableOpacity onPress={() => handleEditRecipe(index)} style={styles.editButton}>
-                <Text style={styles.buttonText}>Editar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDeleteRecipe(index)} style={styles.deleteButton}>
-                <Text style={styles.buttonText}>Deletar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
-
-      <Modal
-        visible={showForm}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowForm(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TextInput
-              style={styles.input}
-              placeholder="Nome da Receita"
-              value={recipeName}
-              onChangeText={setRecipeName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Descrição"
-              value={recipeDescription}
-              onChangeText={setRecipeDescription}
-            />
-            <Button
-              title={editingIndex !== null ? "Atualizar Receita" : "Criar Receita"}
-              onPress={handleCreateOrUpdateRecipe}
-            />
-            <Button
-              title="Cancelar"
-              onPress={() => setShowForm(false)}
-              color="red"
-            />
-          </View>
-        </View>
-      </Modal>
+      <Text style={styles.welcome}>Bem-vindo à Tela Inicial!</Text>
+      <Button title="Sair" onPress={handleLogout} />
+      <Button title='Criar' onPress={() => navigation.navigate('Add')} />
+      {loading ? (
+        <Text>Carregando...</Text>
+      ) : recipes.length > 0 ? (
+        <FlatList
+          data={recipes}
+          keyExtractor={(item) => item.id}
+          renderItem={renderRecipeItem}
+        />
+      ) : (
+        <Text>Sem receitas disponíveis</Text>
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 16,
   },
-  title: {
+  welcome: {
     fontSize: 24,
     marginBottom: 20,
   },
-  welcomeMessage: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  image: {
-    width: 300,
-    height: 200,
-    marginBottom: 20,
-  },
   recipeItem: {
-    padding: 10,
-    borderBottomColor: 'gray',
     borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     width: '100%',
   },
-  recipeName: {
-    fontSize: 18,
+  recipeTitle: {
     fontWeight: 'bold',
-  },
-  buttons: {
-    flexDirection: 'row',
-    marginTop: 10,
+    fontSize: 18,
   },
   editButton: {
-    marginRight: 10,
-    backgroundColor: 'blue',
-    padding: 10,
-  },
-  deleteButton: {
-    backgroundColor: 'red',
-    padding: 10,
-  },
-  buttonText: {
-    color: 'white',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    width: '100%',
+    color: 'blue',
+    marginTop: 10,
+    fontSize: 16,
   },
 });
+
+export default Home;

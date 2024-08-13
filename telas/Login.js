@@ -1,32 +1,27 @@
+// telas/LoginScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // Certifique-se de importar o 'auth'
+import { auth } from '../firebaseConfig';
 
-
-export default function Login({ navigation }) {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Erro', 'Preencha todos os campos!');
-      return;
-    }
+  const [error, setError] = useState('');
 
+  const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      Alert.alert('Sucesso', 'Usuário logado com sucesso!');
-      navigation.navigate('Home'); // Navega para a tela principal após o login
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('User Logged In:', user);
+      navigation.navigate('Home');
     } catch (error) {
-      console.error('Erro ao fazer login:', error.message);
-      Alert.alert('Erro', 'Não foi possível fazer login.');
+      setError(error.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -40,22 +35,29 @@ export default function Login({ navigation }) {
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleLogin} />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <Button title="Entrar" onPress={handleLogin} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 16,
   },
   input: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+  error: {
+    color: 'red',
+    marginBottom: 12,
   },
 });
+
+export default Login;
