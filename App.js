@@ -7,6 +7,7 @@ import Home from './telas/Home';  // Importa a tela Home
 import Add from './telas/Add';
 import Edit from './telas/Edit';
 import Receitas from './telas/Receitas';
+import Detalhes from './telas/Detalhes';
 
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ export default function App() {
         <Stack.Screen name='Add' component={Add}/>
         <Stack.Screen name='Edit' component={Edit}/>
         <Stack.Screen name='Receitas' component={Receitas}/>
+        <Stack.Screen name='Detalhes' component={Detalhes}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

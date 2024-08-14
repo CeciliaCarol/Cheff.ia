@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, Alert, Image } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, query, where, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { getStorage, ref, deleteObject } from 'firebase/storage';
 
 const Receitas = ({ navigation }) => {
   const [userRecipes, setUserRecipes] = useState([]);
@@ -26,6 +27,20 @@ const Receitas = ({ navigation }) => {
     return () => unsubscribe();
   }, []);
 
+  const deleteImage = async (imageUrl) => {
+    if (imageUrl) {
+      try {
+        const storage = getStorage();
+        const imageRef = ref(storage, imageUrl);
+
+        await deleteObject(imageRef);
+        console.log('Imagem excluída com sucesso!');
+      } catch (error) {
+        console.error('Erro ao excluir imagem:', error);
+      }
+    }
+  };
+
   const confirmDelete = (id) => {
     setRecipeToDelete(id);
     setModalVisible(true);
@@ -34,8 +49,24 @@ const Receitas = ({ navigation }) => {
   const handleDelete = async () => {
     if (recipeToDelete) {
       try {
-        await deleteDoc(doc(db, 'receitas', recipeToDelete));
-        Alert.alert('Receita excluída com sucesso!');
+        // Obtendo a URL da imagem da receita a ser excluída
+        const recipeDoc = doc(db, 'receitas', recipeToDelete);
+        const docSnap = await getDoc(recipeDoc);
+
+        if (docSnap.exists()) {
+          const recipeData = docSnap.data();
+          const imageUrl = recipeData.imageUrl;
+
+          // Excluindo a receita do Firestore
+          await deleteDoc(recipeDoc);
+
+          // Excluindo a imagem do Firebase Storage
+          await deleteImage(imageUrl);
+
+          Alert.alert('Receita excluída com sucesso!');
+        } else {
+          Alert.alert('Receita não encontrada');
+        }
       } catch (error) {
         console.error('Erro ao excluir receita: ', error);
         Alert.alert('Erro ao excluir receita, tente novamente.');
@@ -48,6 +79,7 @@ const Receitas = ({ navigation }) => {
 
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem}>
+      {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
       <Text>Ingredientes: {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Nenhum'}</Text>
       <Text>Instruções: {item.instructions || 'Nenhuma'}</Text>
@@ -156,6 +188,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  recipeImage: {
+    width: '100%',
+    height: 200,
+    marginBottom: 10,
   },
 });
 

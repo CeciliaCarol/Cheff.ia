@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, onSnapshot,  } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -25,14 +25,14 @@ const Home = ({ navigation }) => {
     auth.signOut().then(() => navigation.navigate('Login'));
   };
 
-
-
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem}>
+      {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-      <Text>Ingredientes: {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Nenhum'}</Text>
-      <Text>Instruções: {item.instructions || 'Nenhuma'}</Text>
-      <Text>Tags: {item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
+      <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
+        <Text style={styles.viewDetails}>Ver Detalhes</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -80,10 +80,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-  editButton: {
+  viewDetails: {
     color: 'blue',
-    marginTop: 10,
+    marginTop: 5,
     fontSize: 16,
+  },
+  recipeImage: {
+    width: '100%',
+    height: 200,
+    marginBottom: 10,
   },
 });
 
