@@ -1,7 +1,9 @@
 // Register.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { auth, firestore, createUserWithEmailAndPassword, doc, setDoc } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig'; // Importando auth e db corretamente
+import { createUserWithEmailAndPassword } from 'firebase/auth'; // Importando createUserWithEmailAndPassword corretamente
+import { doc, setDoc } from 'firebase/firestore'; // Importando doc e setDoc diretamente do firestore
 
 export default function Register({ navigation }) {
   const [name, setName] = useState('');
@@ -20,7 +22,7 @@ export default function Register({ navigation }) {
       const user = userCredential.user;
 
       // Adiciona o nome e outras informações ao Firestore
-      await setDoc(doc(firestore, 'users', user.uid), {
+      await setDoc(doc(db, 'users', user.uid), {
         name: name,
         email: email,
       });
