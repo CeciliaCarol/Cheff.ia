@@ -1,6 +1,6 @@
 // Register.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet,Alert, TouchableOpacity } from 'react-native';
 import { auth, db } from '../firebaseConfig'; // Importando auth e db corretamente
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Importando createUserWithEmailAndPassword corretamente
 import { doc, setDoc } from 'firebase/firestore'; // Importando doc e setDoc diretamente do firestore
@@ -42,18 +42,20 @@ export default function Register({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text>Registrar</Text>
+      <Text style={styles.header}>Registrar</Text>
       <TextInput
         style={styles.input}
         placeholder="Nome"
         value={name}
         onChangeText={setName}
+        placeholderTextColor="#808080" // Cor do texto do placeholder
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor="#808080" // Cor do texto do placeholder
       />
       <TextInput
         style={styles.input}
@@ -61,8 +63,11 @@ export default function Register({ navigation }) {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        placeholderTextColor="#808080" // Cor do texto do placeholder
       />
-      <Button title="Registrar" onPress={handleRegister} />
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Registrar</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.link}>Já tem uma conta? Faça login</Text>
       </TouchableOpacity>
@@ -75,18 +80,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#FFFFFF', // Cor de fundo da tela
   },
   input: {
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+    width: '100%', // Largura total do campo de entrada
+    borderColor: '#F37E8F', // Cor da borda
+    borderWidth: 2,
+    borderRadius: 10, // Arredondamento das bordas
     marginBottom: 20,
     paddingHorizontal: 10,
+    backgroundColor: '#FAD2D7', // Cor de fundo do campo de entrada
+    color: '#000000', // Cor do texto dentro do campo de entrada
+  },
+  button: {
+    backgroundColor: '#F37E8F', // Cor de fundo do botão
+    borderRadius: 10, // Arredondamento das bordas do botão
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: 'white', // Cor do texto dentro do botão
+    fontSize: 16,
   },
   link: {
-    color: 'blue',
+    color: '#F37E8F', // Cor do link para a tela de login
     marginTop: 12,
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
+  
 });
