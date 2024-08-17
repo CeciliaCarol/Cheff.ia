@@ -1,6 +1,6 @@
 // Register.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet,Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet,Alert, TouchableOpacity, Image } from 'react-native';
 import { auth, db } from '../firebaseConfig'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth'; 
 import { doc, setDoc } from 'firebase/firestore'; 
@@ -44,6 +44,8 @@ export default function Register({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/imagens/logo.png')} style={styles.image} />
+      
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
       <Text style={styles.header}>Nome</Text>
@@ -84,13 +86,14 @@ export default function Register({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
+    alignItems: 'center',
     backgroundColor: '#FFFFFF', // Cor de fundo da tela
   },
   input: {
     height: 43,
-    width: '313', // Largura total do campo de entrada
+    width: '100%', // Largura total do campo de entrada
     borderColor:  '#F37E8F', // Cor da borda
     borderWidth: 1,
     borderRadius: 10, // Arredondamento das bordas
@@ -107,6 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     marginTop: 20,
+    width:'100%',
     
     
   },
@@ -131,6 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 1,
     fontFamily: 'Poppins-Regular',
+    alignSelf: 'flex-start'
   },
   
   titulo: {
@@ -138,7 +143,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40,
     fontStyle: 'normal',
-    fontFamily: 'PlayfairDisplay-Regular'
+    fontFamily: 'PlayfairDisplay-Regular',
+    padding: 20,
+  },
+  image: {
     
   },
 });

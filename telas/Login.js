@@ -1,6 +1,6 @@
 // telas/LoginScreen.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet,TouchableOpacity, Image } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
@@ -24,6 +24,7 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/imagens/logo.png')} style={styles.image} />
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
       <Text style={styles.header}>Email</Text>
@@ -57,13 +58,14 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: '#FFFFFF', // Cor de fundo da tela
+    alignItems: 'center'
   },
   input: {
     height: 43,
-    width: '313', // Largura total do campo de entrada
+    width: '100%', // Largura total do campo de entrada
     borderColor:  '#F37E8F', // Cor da borda
     borderWidth: 1,
     borderRadius: 10, // Arredondamento das bordas
@@ -80,11 +82,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     marginTop: 20,
+    width: '100%',
   },
   buttonText: {
     color: 'white', // Cor do texto dentro do botão
     fontSize: 24,
     fontFamily: 'Poppins-Bold',
+
   },
   error: {
     color: 'red',
@@ -95,6 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 1,
     fontFamily:'Poppins-Regular',
+    alignSelf: 'flex-start',
   },
   
   link: {
@@ -110,8 +115,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40,
     fontStyle: 'normal',
-    fontFamily: 'PlayfairDisplay-Regular'
-    
+    fontFamily: 'PlayfairDisplay-Regular',
+    padding: 20,
   },
 });
 
