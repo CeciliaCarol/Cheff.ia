@@ -8,11 +8,24 @@ import Add from './telas/Add';
 import Edit from './telas/Edit';
 import Receitas from './telas/Receitas';
 import Detalhes from './telas/Detalhes';
+import { ActivityIndicator } from 'react-native';
+import { useFonts } from 'expo-font';
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  const [fontsLoaded] = useFonts({
+    'Poppins-Regular': require('./assets/fontes/Poppins-Regular.ttf'),
+    'Poppins-Bold': require('./assets/fontes/Poppins-Bold.ttf'),
+    'PlayfairDisplay-Regular': require('./assets/fontes/PlayfairDisplay-Regular.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Register">

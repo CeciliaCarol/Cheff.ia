@@ -1,9 +1,11 @@
 // Register.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet,Alert, TouchableOpacity } from 'react-native';
-import { auth, db } from '../firebaseConfig'; // Importando auth e db corretamente
-import { createUserWithEmailAndPassword } from 'firebase/auth'; // Importando createUserWithEmailAndPassword corretamente
-import { doc, setDoc } from 'firebase/firestore'; // Importando doc e setDoc diretamente do firestore
+import { auth, db } from '../firebaseConfig'; 
+import { createUserWithEmailAndPassword } from 'firebase/auth'; 
+import { doc, setDoc } from 'firebase/firestore'; 
+
+
 
 export default function Register({ navigation }) {
   const [name, setName] = useState('');
@@ -12,7 +14,7 @@ export default function Register({ navigation }) {
   
   const handleRegister = async () => {
     if (!name || !email || !password) {
-      Alert.alert('Erro', 'Preencha todos os campos!');
+      Alert.alert('Opa!', 'Preencha todos os campos!');
       return;
     }
 
@@ -32,17 +34,19 @@ export default function Register({ navigation }) {
     } catch (error) {
       // **Aqui foi onde adicionei a verificação do erro específico**
       if (error.code === 'auth/email-already-in-use') {  // **Linha adicionada**
-        Alert.alert('Erro', 'Este email já está em uso. Por favor, use outro email.');  // **Linha adicionada**
+        Alert.alert('Opa!', 'Este email já está em uso. Por favor, use outro email.');  // **Linha adicionada**
       } else {
         console.error('Erro ao registrar:', error.message);
-        Alert.alert('Erro', 'Não foi possível registrar o usuário.');
+        Alert.alert('Opa!', 'Não foi possível registrar o usuário.');
       }
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Registrar</Text>
+      <Text style={styles.titulo}>Crie e Encontre
+      Suas Receitas Favoritas</Text>
+      <Text style={styles.header}>Nome</Text>
       <TextInput
         style={styles.input}
         placeholder="Nome"
@@ -50,6 +54,7 @@ export default function Register({ navigation }) {
         onChangeText={setName}
         placeholderTextColor="#808080" // Cor do texto do placeholder
       />
+      <Text style={styles.header}>Email</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -57,6 +62,7 @@ export default function Register({ navigation }) {
         onChangeText={setEmail}
         placeholderTextColor="#808080" // Cor do texto do placeholder
       />
+      <Text style={styles.header}>Senha</Text>
       <TextInput
         style={styles.input}
         placeholder="Senha"
@@ -83,33 +89,56 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF', // Cor de fundo da tela
   },
   input: {
-    height: 40,
-    width: '100%', // Largura total do campo de entrada
-    borderColor: '#F37E8F', // Cor da borda
-    borderWidth: 2,
+    height: 43,
+    width: '313', // Largura total do campo de entrada
+    borderColor:  '#F37E8F', // Cor da borda
+    borderWidth: 1,
     borderRadius: 10, // Arredondamento das bordas
-    marginBottom: 20,
+    marginBottom: 10,
     paddingHorizontal: 10,
-    backgroundColor: '#FAD2D7', // Cor de fundo do campo de entrada
+    backgroundColor: '#fff', // Cor de fundo do campo de entrada
     color: '#000000', // Cor do texto dentro do campo de entrada
   },
   button: {
     backgroundColor: '#F37E8F', // Cor de fundo do botão
     borderRadius: 10, // Arredondamento das bordas do botão
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 20,
+    
+    
   },
   buttonText: {
     color: 'white', // Cor do texto dentro do botão
-    fontSize: 16,
+    fontSize: 24,
+    fontFamily: 'Poppins-Bold',
+    
+
   },
   link: {
     color: '#F37E8F', // Cor do link para a tela de login
     marginTop: 12,
     textAlign: 'center',
     textDecorationLine: 'underline',
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16
+  },
+
+  header: {
+    color: '#333',
+    fontSize: 20,
+    padding: 1,
+    fontFamily: 'Poppins-Regular',
   },
   
+  titulo: {
+    color: '#333',
+    textAlign: 'center',
+    fontSize: 40,
+    fontStyle: 'normal',
+    fontFamily: 'PlayfairDisplay-Regular'
+    
+  },
 });

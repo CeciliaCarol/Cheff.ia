@@ -24,7 +24,9 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Entrar</Text>
+      <Text style={styles.titulo}>Crie e Encontre
+      Suas Receitas Favoritas</Text>
+      <Text style={styles.header}>Email</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -32,6 +34,7 @@ const Login = ({ navigation }) => {
         onChangeText={setEmail}
         placeholderTextColor="#808080" // Cor do texto do placeholder
       />
+      <Text style={styles.header}>Senha</Text>
       <TextInput
         style={styles.input}
         placeholder="Senha"
@@ -44,7 +47,9 @@ const Login = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
-      
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.link}>Não tem uma conta? Registre-se</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -57,33 +62,57 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF', // Cor de fundo da tela
   },
   input: {
-    height: 40,
-    width: '100%', // Largura total do campo de entrada
-    borderColor: '#F37E8F', // Cor da borda
-    borderWidth: 2,
+    height: 43,
+    width: '313', // Largura total do campo de entrada
+    borderColor:  '#F37E8F', // Cor da borda
+    borderWidth: 1,
     borderRadius: 10, // Arredondamento das bordas
-    marginBottom: 20,
+    marginBottom: 10,
     paddingHorizontal: 10,
-    backgroundColor: '#FAD2D7', // Cor de fundo do campo de entrada
+    backgroundColor: '#fff', // Cor de fundo do campo de entrada
     color: '#000000', // Cor do texto dentro do campo de entrada
   },
   button: {
     backgroundColor: '#F37E8F', // Cor de fundo do botão
     borderRadius: 10, // Arredondamento das bordas do botão
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 20,
   },
   buttonText: {
     color: 'white', // Cor do texto dentro do botão
-    fontSize: 16,
+    fontSize: 24,
+    fontFamily: 'Poppins-Bold',
   },
   error: {
     color: 'red',
     marginBottom: 12,
   },
+  header: {
+    color: '#333',
+    fontSize: 20,
+    padding: 1,
+    fontFamily:'Poppins-Regular',
+  },
   
+  link: {
+    color: '#F37E8F', // Cor do link para a tela de login
+    marginTop: 12,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    fontSize: 16,
+    fontFamily: 'Poppins-Bold',
+  },
+  titulo: {
+    color: '#333',
+    textAlign: 'center',
+    fontSize: 40,
+    fontStyle: 'normal',
+    fontFamily: 'PlayfairDisplay-Regular'
+    
+  },
 });
 
 
