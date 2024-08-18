@@ -197,7 +197,7 @@ padding: 10,
     marginVertical: 10,
   },
   tag: {
-    backgroundColor: '#eee',
+    backgroundColor: '#fff',
     padding: 10,
     marginHorizontal: 8,
     borderRadius: 5,
