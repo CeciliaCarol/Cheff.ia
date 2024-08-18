@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -76,23 +76,42 @@ const Home = ({ navigation }) => {
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem}>
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
-      <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-      <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
-        <Text style={styles.viewDetails}>Ver Detalhes</Text>
-      </TouchableOpacity>
+      <View style={styles.content}>
+        <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
+        <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
+        <View style={styles.c_footer}>
+          <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
+          <Text style={styles.viewDetails}>Ver Mais</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcome}>Bem-vindo à Tela Inicial!</Text>
+      <View style={styles.header}>
+    <View style={styles.searchSection}>
+    <TextInput
+      style={styles.searchInput}
+      placeholder="Pesquise..."
+      placeholderTextColor="#aaa"
+    />
+    <View style={styles.iconContainer}>
+      <TouchableOpacity>
+        
+      </TouchableOpacity>
+    </View>
+  </View>
+
       <Button title="Sair" onPress={handleLogout} />
-      <Button title='Criar' onPress={() => navigation.navigate('Add')} />
+      
       <Button title="Minhas Receitas" onPress={() => navigation.navigate('Receitas')} />
       <ScrollView horizontal style={styles.tagContainer}>
         {TAGS.map(tag => renderTag(tag))}
       </ScrollView>
+      </View>
+      
       {loading ? (
         <Text>Carregando...</Text>
       ) : filteredRecipes.length > 0 ? (
@@ -104,41 +123,74 @@ const Home = ({ navigation }) => {
       ) : (
         <Text>Sem receitas disponíveis</Text>
       )}
+      
+      
+       <View style={styles.footer}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
+          <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  
+searchSection: {
+ flexDirection: 'row',
+ alignItems: 'center',
+ backgroundColor: '#fff',
+ borderRadius: 20,
+ paddingHorizontal: 15,
+ marginBottom: 10,
+},
+
+ header: {
+backgroundColor: '#f37e8f',
+borderBottomLeftRadius: 20,
+borderBottomRightRadius: 20,
+padding: 10,
+
+ },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+  
+    padding: 0,
+    backgroundColor:'#fff',
   },
   welcome: {
     fontSize: 24,
     marginBottom: 20,
   },
   recipeItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    elevation: 5,
+    marginVertical: 8,
+    padding: 10,
     width: '100%',
+    margin:10,
+    
+   
   },
   recipeTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
+    color: '#333',
+    fontSize: 24,
+    fontFamily: 'PlayfairDisplay-Regular',
+    alignSelf: 'flex-start'
   },
   viewDetails: {
-    color: 'blue',
-    marginTop: 5,
-    fontSize: 16,
+    color: '#fff',
+    fontFamily:'Poppins-Regular',
+    fontSize: 20,
   },
   recipeImage: {
-    width: '100%',
+    width: 150,
     height: 200,
-    marginBottom: 10,
+    borderRadius: 20,
+    marginRight: 10,
   },
   tagContainer: {
     flexDirection: 'row',
@@ -147,7 +199,7 @@ const styles = StyleSheet.create({
   tag: {
     backgroundColor: '#eee',
     padding: 10,
-    marginHorizontal: 5,
+    marginHorizontal: 8,
     borderRadius: 5,
   },
   tagSelected: {
@@ -158,6 +210,47 @@ const styles = StyleSheet.create({
   },
   tagSelectedText: {
     color: '#fff',
+  },
+
+  footer: {
+    width: 70,
+    height: 70,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 60,                       // Largura do ícone
+    height: 60,  
+  },
+  button: {
+    width: 70,                        // Largura do botão
+    height: 70,                       // Altura do botão
+    borderRadius: 40,                // Faz o botão redondo
+    backgroundColor: '#F37E8F',      // Cor de fundo do botão (pode ser alterada)
+    justifyContent: 'center',        // Centraliza o conteúdo verticalmente
+    alignItems: 'center',            // Centraliza o conteúdo horizontalmente
+    elevation: 5,
+  },
+
+  c_footer: {
+  marginTop: 100,
+  
+  },
+
+  b_button: {
+   backgroundColor:'#f58d94',
+   padding: 5,
+   borderRadius: 10,
+   alignItems: 'center',
+  },
+
+  
+
+  content: {
+   width: 200,
   },
 });
 
