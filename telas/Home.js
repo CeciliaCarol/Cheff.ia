@@ -10,6 +10,11 @@ const Home = ({ navigation }) => {
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
@@ -91,27 +96,39 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-    <View style={styles.searchSection}>
-    <TextInput
-      style={styles.searchInput}
-      placeholder="Pesquise..."
-      placeholderTextColor="#aaa"
-    />
-    <View style={styles.iconContainer}>
-      <TouchableOpacity>
-        
-      </TouchableOpacity>
-    </View>
-  </View>
-
-      <Button title="Sair" onPress={handleLogout} />
-      
-      <Button title="Minhas Receitas" onPress={() => navigation.navigate('Receitas')} />
-      <ScrollView horizontal style={styles.tagContainer}>
-        {TAGS.map(tag => renderTag(tag))}
-      </ScrollView>
+        <View style={styles.searchSection}>
+          <View style={styles.pesquisa}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Pesquise..."
+              placeholderTextColor="#aaa"
+            />
+            <View style={styles.iconContainer}>
+              <TouchableOpacity>
+                <Image source={require('../assets/imagens/Search.png')} style={styles.searchicon}/>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <TouchableOpacity onPress={toggleDropdown} style={styles.menubutton}>
+            <Image source={require('../assets/imagens/Menu Vertical.png')} style={styles.menuIcon}/>
+          </TouchableOpacity>
+        </View>
+        {dropdownVisible && (
+          <View style={styles.dropdown}>
+            <TouchableOpacity onPress={() => navigation.navigate('Receitas')} style={styles.dropdownItem}>
+              <Text style={styles.dropdownText}>Minhas Receitas</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleLogout} style={styles.dropdownItem}>
+              <Text style={styles.dropdownText}>Sair</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+     
+        <ScrollView horizontal style={styles.tagContainer}>
+          {TAGS.map(tag => renderTag(tag))}
+        </ScrollView>
       </View>
-      
+
       {loading ? (
         <Text>Carregando...</Text>
       ) : filteredRecipes.length > 0 ? (
@@ -125,7 +142,7 @@ const Home = ({ navigation }) => {
       )}
       
       
-       <View style={styles.footer}>
+      <View style={styles.footer}>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
           <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
         </TouchableOpacity>
@@ -139,25 +156,69 @@ const styles = StyleSheet.create({
 searchSection: {
  flexDirection: 'row',
  alignItems: 'center',
- backgroundColor: '#fff',
- borderRadius: 20,
- paddingHorizontal: 15,
- marginBottom: 10,
+justifyContent: 'space-between',
+ marginBottom: 20,
 },
 
- header: {
-backgroundColor: '#f37e8f',
-borderBottomLeftRadius: 20,
-borderBottomRightRadius: 20,
-padding: 10,
+pesquisa: {
+  backgroundColor: '#fff',
+  borderRadius: 10, 
+  height: 43,
+  width: 325,
+  flexDirection: 'row',
+  margin: 10,
+},
+
+searchInput: {
+  flex: 1,
+  height: 40,
+  padding: 10,
+  fontSize: 16,
+  
+},
+
+header: {
+
+  backgroundColor: '#f37e8f',
+  borderBottomLeftRadius: 20,
+  borderBottomRightRadius: 20,
+  padding: 10,
+  
 
  },
   container: {
     flex: 1,
-  
-    padding: 0,
     backgroundColor:'#fff',
   },
+
+  menubutton: {
+    padding: 2,
+    backgroundColor: '#FDD3D9',
+    width: 43,
+    height: 43,
+    borderRadius: 10,
+    
+    
+  },
+
+  menuIcon: {
+  width: 40,
+  height: 40,
+  },
+
+  dropdown: {
+    position: 'absolute',
+    top: 50,
+    right: 10,
+    backgroundColor: '#fff',
+    borderRadius:10,
+    elevation:5,
+    zIndex:1,
+  },
+  dropdownItem: {
+    padding: 10,
+  },
+
   welcome: {
     fontSize: 24,
     marginBottom: 20,
@@ -195,6 +256,7 @@ padding: 10,
   tagContainer: {
     flexDirection: 'row',
     marginVertical: 10,
+    paddingHorizontal: 10,
   },
   tag: {
     backgroundColor: '#fff',
@@ -251,6 +313,12 @@ padding: 10,
 
   content: {
    width: 200,
+  },
+
+  searchicon: {
+   width: 40,
+   height: 40,
+   marginLeft: 10,
   },
 });
 
