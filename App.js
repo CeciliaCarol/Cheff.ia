@@ -18,7 +18,7 @@ export default function App() {
 
   const [fontsLoaded] = useFonts({
     'Poppins-Regular': require('./assets/fontes/Poppins-Regular.ttf'),
-    'Poppins-Bold': require('./assets/fontes/Poppins-Bold.ttf'),
+    'Poppins-SemiBold': require('./assets/fontes/Poppins-SemiBold.ttf'),
     'PlayfairDisplay-Regular': require('./assets/fontes/PlayfairDisplay-Regular.ttf'),
   });
 

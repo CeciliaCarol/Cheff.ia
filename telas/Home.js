@@ -101,7 +101,7 @@ const Home = ({ navigation }) => {
             <TextInput
               style={styles.searchInput}
               placeholder="Pesquise..."
-              placeholderTextColor="#aaa"
+              placeholderTextColor="#f37e8f"
             />
             <View style={styles.iconContainer}>
               <TouchableOpacity>
@@ -219,6 +219,12 @@ header: {
     padding: 10,
   },
 
+  dropdownText: {
+   fontSize: 20,
+   fontFamily: 'Poppins-Regular',
+
+  },
+
   welcome: {
     fontSize: 24,
     marginBottom: 20,
@@ -231,9 +237,8 @@ header: {
     elevation: 5,
     marginVertical: 8,
     padding: 10,
-    width: '100%',
-    margin:10,
-    
+    margin: 15,
+    overflow:'hidden',
    
   },
   recipeTitle: {
@@ -261,14 +266,17 @@ header: {
   tag: {
     backgroundColor: '#fff',
     padding: 10,
-    marginHorizontal: 8,
+    marginHorizontal: 10,
     borderRadius: 5,
+    textAlign:'center',
   },
   tagSelected: {
-    backgroundColor: '#007BFF',
+    backgroundColor: 'pink',
   },
   tagText: {
     color: '#333',
+    fontFamily:'Poppins-Regular',
+    fontSize: 16,
   },
   tagSelectedText: {
     color: '#fff',
@@ -299,6 +307,7 @@ header: {
 
   c_footer: {
   marginTop: 100,
+  alignItems: 'center',
   
   },
 
@@ -307,12 +316,11 @@ header: {
    padding: 5,
    borderRadius: 10,
    alignItems: 'center',
+   width:'100%',
   },
 
-  
-
   content: {
-   width: 200,
+    flex: 1,
   },
 
   searchicon: {

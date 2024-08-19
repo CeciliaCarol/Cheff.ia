@@ -80,23 +80,26 @@ const Receitas = ({ navigation }) => {
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem}>
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
-      <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-      <Text>Ingredientes: {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Nenhum'}</Text>
-      <Text>Instruções: {item.instructions || 'Nenhuma'}</Text>
-      <Text>Tags: {item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Edit', { recipeId: item.id })}>
-        <Text style={styles.editButton}>Editar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => confirmDelete(item.id)}>
-        <Text style={styles.deleteButton}>Excluir</Text>
-      </TouchableOpacity>
+      <View style={styles.content}>
+        <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
+        <Text style={styles.infoText}>Ingredientes: {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Nenhum'}</Text>
+        <Text style={styles.infoText}>Instruções: {item.instructions || 'Nenhuma'}</Text>
+        <Text style={styles.infoText}>Tags: {item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
+      </View>
+      <View style={styles.c_footer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Edit', { recipeId: item.id })}>
+          <Text style={styles.editButton}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => confirmDelete(item.id)}>
+          <Text style={styles.deleteButton}>Excluir</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Minhas Receitas</Text>
-      <Button title="Voltar" onPress={() => navigation.goBack()} />
       {loading ? (
         <Text>Carregando...</Text>
       ) : userRecipes.length > 0 ? (
@@ -117,10 +120,15 @@ const Receitas = ({ navigation }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
+            <Text style={styles.modalTitulo}>Aviso!</Text>
             <Text style={styles.modalText}>Tem certeza que deseja excluir esta receita?</Text>
             <View style={styles.modalButtons}>
-              <Button title="Cancelar" onPress={() => setModalVisible(false)} />
-              <Button title="Excluir" onPress={handleDelete} color="red" />
+              <TouchableOpacity style={styles.cancel} onPress={() => setModalVisible(false)}>
+                <Text style={{color: '#fff'}}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.delete} onPress={handleDelete}>
+                <Text style={{color: '#f37e8f'}}>Excluir</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -132,32 +140,67 @@ const Receitas = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+    backgroundColor: '#fff',
+    
   },
   welcome: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
+    fontFamily:'PlayfairDisplay-Regular',
+    padding: 15,
+    
+  },
+
+  content: {
+   width: '100%',
   },
   recipeItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    elevation: 5,
+    marginVertical: 8,
+    padding: 10,
+    margin: 15,
+    overflow: 'hidden',
   },
   recipeTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
+    fontFamily: 'PlayfairDisplay-Regular',
+    fontSize: 24,
   },
+
+  infoText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    color: '#333',
+  },
+
+  c_footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,  
+    },
   editButton: {
-    color: 'blue',
+    backgroundColor:'#f58d94',
+    padding: 10,
+    borderRadius: 10,
+    color: '#fff',
     marginTop: 10,
+    marginRight: 10,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 18,
+
   },
   deleteButton: {
-    color: 'red',
+    color: '#fff',
     marginTop: 10,
+    padding: 10,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
+    marginLeft: 10,
   },
   modalContainer: {
     flex: 1,
@@ -166,11 +209,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    width: 300,
+    width: 340,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
+    padding: 10,
+    alignItems: 'left',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -180,18 +223,40 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+
+  modalTitulo: {
+    fontSize: 32,
+    fontFamily: 'PlayfairDisplay-Regular',
+  },
+
   modalText: {
-    fontSize: 18,
+    fontSize: 20,
     marginBottom: 20,
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     width: '100%',
   },
+
+  cancel: {
+    backgroundColor: '#f37e8f',
+    borderRadius: 10,
+    padding: 10,
+    marginRight: 5,
+  },
+  delete: {
+   borderColor: '#f37e8f',
+   borderWidth: 1,
+   borderRadius: 10,
+   padding: 10,
+   marginLeft: 5,
+  },
+
   recipeImage: {
     width: '100%',
     height: 200,
+    borderRadius: 20,
     marginBottom: 10,
   },
 });

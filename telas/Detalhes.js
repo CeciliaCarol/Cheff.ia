@@ -39,10 +39,13 @@ const Detalhes = ({ route }) => {
   return (
     <View style={styles.container}>
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
-      <Text style={styles.title}>{recipe.name}</Text>
-      <Text>Ingredientes: {recipe.ingredients.join(', ')}</Text>
-      <Text>Instruções: {recipe.instructions}</Text>
-      <Text>Tags: {recipe.tags.join(', ')}</Text>
+        <View style={styles.content}>
+          <Text style={styles.title}>{recipe.name}</Text>
+          <Text style={styles.conteudo}>Ingredientes</Text>
+          <Text>{recipe.ingredients.join(', ')}</Text>
+          <Text style={styles.conteudo}>Instruções </Text>
+          <Text>{recipe.instructions}</Text>
+        </View>
     </View>
   );
 };
@@ -50,17 +53,27 @@ const Detalhes = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+  },
+  content: {
+    padding: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 32,
     marginBottom: 10,
+    fontFamily: 'PlayfairDisplay-Regular',
+  },
+  conteudo: {
+    fontSize: 18,
+    marginTop: 15,
+    marginBottom: 15,
+    fontFamily: 'Poppins-SemiBold',
   },
   recipeImage: {
     width: '100%',
-    height: 200,
-    marginBottom: 10,
+    height: 300,
+    marginBottom: 5,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
 });
 
