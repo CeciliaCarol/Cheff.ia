@@ -44,7 +44,8 @@ export default function Register({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/imagens/logo.png')} style={styles.image} />
+      <Image source={require('../assets/imagens/logo1.png')} style={styles.image}
+      resizeMode='center' />
       
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   image: {
-    
+    width: 300,
+    height: 150,
   },
 });

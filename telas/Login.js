@@ -24,7 +24,8 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/imagens/logo.png')} style={styles.image} />
+      <Image source={require('../assets/imagens/logo1.png')} style={styles.image}
+      resizeMode='center' />
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
       <Text style={styles.header}>Email</Text>
@@ -117,6 +118,10 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontFamily: 'PlayfairDisplay-Regular',
     padding: 20,
+  },
+  image: {
+    width: 300,
+    height: 150,
   },
 });
 
