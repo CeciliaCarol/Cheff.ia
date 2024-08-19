@@ -42,7 +42,11 @@ const Detalhes = ({ route }) => {
         <View style={styles.content}>
           <Text style={styles.title}>{recipe.name}</Text>
           <Text style={styles.conteudo}>Ingredientes</Text>
-          <Text>{recipe.ingredients.join(', ')}</Text>
+          {recipe.ingredients?.length > 0 && recipe.ingredients.map((ingredient, index) => (
+    <Text key={index} style={styles.ingredientItem}>
+      {'\u2022'} {ingredient}
+    </Text>
+  ))}
           <Text style={styles.conteudo}>Instruções </Text>
           <Text>{recipe.instructions}</Text>
         </View>
@@ -74,6 +78,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+  },
+  ingredientItem: {
+    fontSize: 16,
+    lineHeight: 24,
   },
 });
 

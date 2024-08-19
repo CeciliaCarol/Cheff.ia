@@ -82,9 +82,16 @@ const Receitas = ({ navigation }) => {
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-        <Text style={styles.infoText}>Ingredientes: {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Nenhum'}</Text>
-        <Text style={styles.infoText}>Instruções: {item.instructions || 'Nenhuma'}</Text>
-        <Text style={styles.infoText}>Tags: {item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
+        <Text style={styles.infoText}>Ingredientes</Text>
+         {item.ingredients?.length > 0 && item.ingredients.map((ingredient, index) => (
+          <Text key={index} style={styles.ingredientItem}> 
+            {'\u2022'} {ingredient}
+          </Text>
+        ))}
+        <Text style={styles.infoText}>Passo a passo</Text>
+        <Text style={{marginLeft: 5}}>{item.instructions || 'Nenhuma'}</Text>
+        <Text style={styles.infoText}>Tags </Text>
+        <Text style={{marginLeft: 5}}>{item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
       </View>
       <View style={styles.c_footer}>
         <TouchableOpacity onPress={() => navigation.navigate('Edit', { recipeId: item.id })}>
@@ -165,15 +172,22 @@ const styles = StyleSheet.create({
     margin: 15,
     overflow: 'hidden',
   },
+  ingredientItem: {
+    fontSize: 16,
+    lineHeight: 20,
+    paddingLeft: 5,
+  },
   recipeTitle: {
     fontFamily: 'PlayfairDisplay-Regular',
     fontSize: 24,
+    padding: 5,
   },
 
   infoText: {
     fontSize: 16,
     fontFamily: 'Poppins-Regular',
     color: '#333',
+    padding: 3,
   },
 
   c_footer: {
