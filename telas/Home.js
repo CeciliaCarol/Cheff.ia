@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -14,7 +14,11 @@ const Home = ({ navigation }) => {
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
-  }
+  };
+
+  const closeDropdown = () => {
+    setDropdownVisible(false);
+  };
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
@@ -26,7 +30,7 @@ const Home = ({ navigation }) => {
       setLoading(false);
     });
 
-    // Cleanup the listener on component unmount
+    // Limpar o ouvinte quando o componente for desmontado
     return () => unsubscribe();
   }, []);
 
@@ -86,7 +90,7 @@ const Home = ({ navigation }) => {
         <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
         <View style={styles.c_footer}>
           <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
-          <Text style={styles.viewDetails}>Ver Mais</Text>
+            <Text style={styles.viewDetails}>Ver Mais</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -94,138 +98,122 @@ const Home = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.searchSection}>
-          <View style={styles.pesquisa}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Pesquise..."
-              placeholderTextColor="#f37e8f"
-            />
-            <View style={styles.iconContainer}>
-              <TouchableOpacity>
-                <Image source={require('../assets/imagens/Search.png')} style={styles.searchicon}/>
+    <TouchableWithoutFeedback onPress={closeDropdown}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.searchSection}>
+            <View style={styles.pesquisa}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Pesquise..."
+                placeholderTextColor="#f37e8f"
+              />
+              <View style={styles.iconContainer}>
+                <TouchableOpacity>
+                  <Image source={require('../assets/imagens/Search.png')} style={styles.searchicon} />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity onPress={toggleDropdown} style={styles.menubutton}>
+              <Image source={require('../assets/imagens/Menu Vertical.png')} style={styles.menuIcon} />
+            </TouchableOpacity>
+          </View>
+          {dropdownVisible && (
+            <View style={styles.dropdown}>
+              <TouchableOpacity onPress={() => navigation.navigate('Receitas')} style={styles.dropdownItem}>
+                <Text style={styles.dropdownText}>Minhas Receitas</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout} style={styles.dropdownItem}>
+                <Text style={styles.dropdownText}>Sair</Text>
               </TouchableOpacity>
             </View>
-          </View>
-          <TouchableOpacity onPress={toggleDropdown} style={styles.menubutton}>
-            <Image source={require('../assets/imagens/Menu Vertical.png')} style={styles.menuIcon}/>
+          )}
+          <ScrollView horizontal style={styles.tagContainer}>
+            {TAGS.map(tag => renderTag(tag))}
+          </ScrollView>
+        </View>
+
+        {loading ? (
+          <Text>Carregando...</Text>
+        ) : filteredRecipes.length > 0 ? (
+          <FlatList
+            data={filteredRecipes}
+            keyExtractor={(item) => item.id}
+            renderItem={renderRecipeItem}
+          />
+        ) : (
+          <Text>Sem receitas disponíveis</Text>
+        )}
+
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
+            <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
           </TouchableOpacity>
         </View>
-        {dropdownVisible && (
-          <View style={styles.dropdown}>
-            <TouchableOpacity onPress={() => navigation.navigate('Receitas')} style={styles.dropdownItem}>
-              <Text style={styles.dropdownText}>Minhas Receitas</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogout} style={styles.dropdownItem}>
-              <Text style={styles.dropdownText}>Sair</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-     
-        <ScrollView horizontal style={styles.tagContainer}>
-          {TAGS.map(tag => renderTag(tag))}
-        </ScrollView>
       </View>
-
-      {loading ? (
-        <Text>Carregando...</Text>
-      ) : filteredRecipes.length > 0 ? (
-        <FlatList
-          data={filteredRecipes}
-          keyExtractor={(item) => item.id}
-          renderItem={renderRecipeItem}
-        />
-      ) : (
-        <Text>Sem receitas disponíveis</Text>
-      )}
-      
-      
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
-          <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  
-searchSection: {
- flexDirection: 'row',
- alignItems: 'center',
-justifyContent: 'space-between',
- marginBottom: 20,
-},
-
-pesquisa: {
-  backgroundColor: '#fff',
-  borderRadius: 10, 
-  height: 43,
-  width: 325,
-  flexDirection: 'row',
-  margin: 10,
-},
-
-searchInput: {
-  flex: 1,
-  height: 40,
-  padding: 10,
-  fontSize: 16,
-  
-},
-
-header: {
-
-  backgroundColor: '#f37e8f',
-  borderBottomLeftRadius: 20,
-  borderBottomRightRadius: 20,
-  padding: 10,
-  
-
- },
+  searchSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  pesquisa: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    height: 43,
+    width: 325,
+    flexDirection: 'row',
+    margin: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    padding: 10,
+    fontSize: 16,
+  },
+  header: {
+    backgroundColor: '#f37e8f',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    padding: 10,
+  },
   container: {
     flex: 1,
-    backgroundColor:'#fff',
+    backgroundColor: '#fff',
   },
-
   menubutton: {
     padding: 2,
     backgroundColor: '#FDD3D9',
     width: 43,
     height: 43,
     borderRadius: 10,
-    
-    
   },
-
   menuIcon: {
-  width: 40,
-  height: 40,
+    width: 40,
+    height: 40,
   },
-
   dropdown: {
     position: 'absolute',
     top: 50,
     right: 10,
     backgroundColor: '#fff',
-    borderRadius:10,
-    elevation:5,
-    zIndex:1,
+    borderRadius: 10,
+    elevation: 5,
+    zIndex: 1,
   },
   dropdownItem: {
     padding: 10,
   },
-
   dropdownText: {
-   fontSize: 20,
-   color: '#333',
-   fontFamily: 'Poppins-Regular',
-
+    fontSize: 20,
+    color: '#333',
+    fontFamily: 'Poppins-Regular',
   },
-
   welcome: {
     fontSize: 24,
     marginBottom: 20,
@@ -239,18 +227,17 @@ header: {
     marginVertical: 8,
     padding: 10,
     margin: 15,
-    overflow:'hidden',
-   
+    overflow: 'hidden',
   },
   recipeTitle: {
     color: '#333',
     fontSize: 24,
     fontFamily: 'PlayfairDisplay-Regular',
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   viewDetails: {
     color: '#fff',
-    fontFamily:'Poppins-Regular',
+    fontFamily: 'Poppins-Regular',
     fontSize: 20,
   },
   recipeImage: {
@@ -269,20 +256,19 @@ header: {
     padding: 10,
     marginHorizontal: 10,
     borderRadius: 5,
-    textAlign:'center',
+    textAlign: 'center',
   },
   tagSelected: {
     backgroundColor: 'pink',
   },
   tagText: {
     color: '#333',
-    fontFamily:'Poppins-Regular',
+    fontFamily: 'Poppins-Regular',
     fontSize: 16,
   },
   tagSelectedText: {
     color: '#fff',
   },
-
   footer: {
     width: 70,
     height: 70,
@@ -293,41 +279,36 @@ header: {
     justifyContent: 'center',
   },
   icon: {
-    width: 60,                       // Largura do ícone
-    height: 60,  
+    width: 60,
+    height: 60,
   },
   button: {
-    width: 70,                        // Largura do botão
-    height: 70,                       // Altura do botão
-    borderRadius: 40,                // Faz o botão redondo
-    backgroundColor: '#F37E8F',      // Cor de fundo do botão (pode ser alterada)
-    justifyContent: 'center',        // Centraliza o conteúdo verticalmente
-    alignItems: 'center',            // Centraliza o conteúdo horizontalmente
+    width: 70,
+    height: 70,
+    borderRadius: 40,
+    backgroundColor: '#F37E8F',
+    justifyContent: 'center',
+    alignItems: 'center',
     elevation: 5,
   },
-
   c_footer: {
-  marginTop: 100,
-  alignItems: 'center',
-  
+    marginTop: 100,
+    alignItems: 'center',
   },
-
   b_button: {
-   backgroundColor:'#f58d94',
-   padding: 5,
-   borderRadius: 10,
-   alignItems: 'center',
-   width:'100%',
+    backgroundColor: '#f58d94',
+    padding: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '100%',
   },
-
   content: {
     flex: 1,
   },
-
   searchicon: {
-   width: 40,
-   height: 40,
-   marginLeft: 10,
+    width: 40,
+    height: 40,
+    marginLeft: 10,
   },
 });
 
