@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-Regular',
     color: '#333',
-    padding: 3,
+    padding: 5,
   },
 
   c_footer: {
