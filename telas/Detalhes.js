@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -37,29 +37,30 @@ const Detalhes = ({ route }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
-        <View style={styles.content}>
-          <Text style={styles.title}>{recipe.name}</Text>
-          <Text style={styles.conteudo}>Ingredientes</Text>
-          {recipe.ingredients?.length > 0 && recipe.ingredients.map((ingredient, index) => (
-    <Text key={index} style={styles.ingredientItem}>
-      {'\u2022'} {ingredient}
-    </Text>
-  ))}
-          <Text style={styles.conteudo}>Instruções </Text>
-          <Text>{recipe.instructions}</Text>
-        </View>
-    </View>
+      <View style={styles.content}>
+        <Text style={styles.title}>{recipe.name}</Text>
+        <Text style={styles.conteudo}>Ingredientes</Text>
+        {recipe.ingredients?.length > 0 && recipe.ingredients.map((ingredient, index) => (
+          <Text key={index} style={styles.ingredientItem}>
+            {'\u2022'} {ingredient}
+          </Text>
+        ))}
+        <Text style={styles.conteudo}>Instruções</Text>
+        <Text>{recipe.instructions}</Text>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    padding: 20,
   },
   content: {
-    padding: 20,
+    paddingBottom: 20, // Ensure there's padding at the bottom for better visual
   },
   title: {
     fontSize: 32,
