@@ -86,12 +86,14 @@ const Edit = ({ route, navigation }) => {
         style={styles.input}
         value={recipe.ingredients.join(', ')}
         onChangeText={(text) => setRecipe({ ...recipe, ingredients: text.split(', ') })}
+        multiline={true}
       />
       <Text style={styles.label}>Instruções</Text>
       <TextInput
         style={styles.input}
         value={recipe.instructions}
         onChangeText={(text) => setRecipe({ ...recipe, instructions: text })}
+        multiline={true}
       />
       <Text style={styles.label}>Tags</Text>
       <TextInput
