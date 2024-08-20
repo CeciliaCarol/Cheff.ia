@@ -57,10 +57,9 @@ const Detalhes = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
   },
   content: {
-    paddingBottom: 20, // Ensure there's padding at the bottom for better visual
+    padding: 20,
   },
   title: {
     fontSize: 32,
