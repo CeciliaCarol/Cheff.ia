@@ -221,6 +221,7 @@ header: {
 
   dropdownText: {
    fontSize: 20,
+   color: '#333',
    fontFamily: 'Poppins-Regular',
 
   },

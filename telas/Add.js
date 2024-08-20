@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Image, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth } from '../firebaseConfig';
@@ -69,49 +69,108 @@ const Add = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Crie sua receita</Text>
+      <Text style={styles.subtitle}>Nome de Receita</Text>
       <TextInput
         placeholder="Nome da Receita"
+        placeholderTextColor={'#F37E8F'}
         value={recipeName}
         onChangeText={setRecipeName}
+        style={styles.input}
       />
+      <Text style={styles.subtitle}>Ingredientes</Text>
       <TextInput
         placeholder="Ingredientes (separados por vírgula)"
         value={ingredients}
+        placeholderTextColor={'#F37E8F'}
         onChangeText={setIngredients}
+        style={styles.input}
+        multiline={true  
+        }
       />
+      <Text style={styles.subtitle}>Passo a Passo</Text>
       <TextInput
         placeholder="Instruções"
         value={instructions}
+        placeholderTextColor={'#F37E8F'}
         onChangeText={setInstructions}
+        style={styles.input}
+        multiline={true}
       />
+      <Text style={styles.subtitle}>Tags</Text>
       <TextInput
         placeholder="Tags (separadas por vírgula)"
         value={tags}
+        placeholderTextColor={'#F37E8F'}
         onChangeText={setTags}
+        style={styles.input}
       />
-      <Button title="Escolher Imagem" onPress={handlePickImage} />
+      <TouchableOpacity onPress={handlePickImage} >
+        <Text style={styles.buttonImg}>Adicionar Imagem</Text>
+      </TouchableOpacity>
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-      <Button title="Adicionar Receita" onPress={handleAddRecipe} />
-    </View>
+      <TouchableOpacity onPress={handleAddRecipe}>
+        <Text style={styles.buttonAdd}>Criar</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 32,
+    textAlign:'center',
+    margin:20,
+    fontFamily: 'PlayfairDisplay-Regular',
+    color: '#333',
+  },
+  subtitle: {
+    color: '#333',
+    fontSize: 20,
+    marginLeft: 15,
+    fontFamily:'Poppins-Regular',
+    alignSelf: 'flex-start',
+  },
   container: {
-    padding: 20,
+    padding: 10,
+    backgroundColor: '#fff',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#F37E8F',
     padding: 10,
-    marginBottom: 20,
-    borderRadius: 5,
+    margin: 15,
+    borderRadius: 10,
+    marginTop: 2,
   },
   image: {
-    width: '100%',
-    height: 200,
+    width: 100,
+    height: 100,
     marginBottom: 20,
+    marginHorizontal: 15,
+    borderRadius: 10,
+  },
+  buttonAdd: {
+    color: '#fff',
+    backgroundColor: '#F37E8F',
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 10,
+    fontSize: 20,
+    marginHorizontal: 120,
+    marginTop: 50,
+    fontFamily: 'Poppins-SemiBold',
+  },
+  buttonImg: {
+    margin: 15,
+    color:'#333',
+    backgroundColor: '#F9E6D8',
+    padding: 8,
+    borderRadius: 10,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
   },
 });
 
