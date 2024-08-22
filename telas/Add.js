@@ -5,12 +5,14 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 
+const tagsList = ['Doce', 'Salgado', 'Vegano', 'Vegetariano', 'Sem Lactose'];
+
 const Add = ({ navigation }) => {
   const [recipeName, setRecipeName] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [imageUri, setImageUri] = useState(null);
-  const [tags, setTags] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const handlePickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -56,7 +58,7 @@ const Add = ({ navigation }) => {
         name: recipeName,
         ingredients: ingredients.split(','), // Separa os ingredientes por vírgula
         instructions: instructions,
-        tags: tags.split(','), // Separa as tags por vírgula
+        tags: selectedTags, // Usa as tags selecionadas
         createdAt: new Date(),
         imageUrl: imageUrl,
       });
@@ -66,6 +68,14 @@ const Add = ({ navigation }) => {
     } catch (error) {
       console.error('Erro ao adicionar a receita: ', error);
     }
+  };
+
+  const toggleTag = (tag) => {
+    setSelectedTags(prevTags =>
+      prevTags.includes(tag)
+        ? prevTags.filter(t => t !== tag)
+        : [...prevTags, tag]
+    );
   };
 
   return (
@@ -86,8 +96,7 @@ const Add = ({ navigation }) => {
         placeholderTextColor={'#F37E8F'}
         onChangeText={setIngredients}
         style={styles.input}
-        multiline={true  
-        }
+        multiline={true}
       />
       <Text style={styles.subtitle}>Passo a Passo</Text>
       <TextInput
@@ -99,14 +108,23 @@ const Add = ({ navigation }) => {
         multiline={true}
       />
       <Text style={styles.subtitle}>Tags</Text>
-      <TextInput
-        placeholder="Tags (separadas por vírgula)"
-        value={tags}
-        placeholderTextColor={'#F37E8F'}
-        onChangeText={setTags}
-        style={styles.input}
-      />
-      <TouchableOpacity onPress={handlePickImage} >
+      <View style={styles.tagsContainer}>
+        {tagsList.map(tag => (
+          <TouchableOpacity
+            key={tag}
+            style={[
+              styles.tagButton,
+              selectedTags.includes(tag) && styles.selectedTagButton
+            ]}
+            onPress={() => toggleTag(tag)}
+          >
+            <Text style={styles.tagText}>
+              {tag}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <TouchableOpacity onPress={handlePickImage}>
         <Text style={styles.buttonImg}>Adicionar Imagem</Text>
       </TouchableOpacity>
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
@@ -171,6 +189,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    margin: 15,
+  },
+  tagButton: {
+    backgroundColor: '#F37E8F',
+    padding: 10,
+    borderRadius: 10,
+    margin: 5,
+  },
+  selectedTagButton: {
+    backgroundColor: '#A31F51',
+  },
+  tagText: {
+    color: '#fff',
+    fontFamily: 'Poppins-Regular',
   },
 });
 
