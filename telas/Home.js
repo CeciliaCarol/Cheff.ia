@@ -9,6 +9,7 @@ const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [searchText, setSearchText] = useState(''); // Adicionado estado para o texto de busca
   const [loading, setLoading] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -35,13 +36,16 @@ const Home = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    let filtered = recipes;
+
+    // Filtrando por tags
     if (selectedTags.length > 0) {
-      const filtered = recipes.filter(recipe =>
+      filtered = filtered.filter(recipe =>
         recipe.tags && recipe.tags.some(tag => selectedTags.includes(tag))
       );
 
       // Ordena as receitas filtradas, priorizando as que têm tags selecionadas
-      const prioritized = filtered.sort((a, b) => {
+      filtered = filtered.sort((a, b) => {
         const aHasTag = selectedTags.some(tag => a.tags.includes(tag));
         const bHasTag = selectedTags.some(tag => b.tags.includes(tag));
 
@@ -49,12 +53,17 @@ const Home = ({ navigation }) => {
         if (!aHasTag && bHasTag) return 1;
         return 0; // Se ambos têm ou não têm tags, mantém a ordem original
       });
-
-      setFilteredRecipes(prioritized);
-    } else {
-      setFilteredRecipes(recipes);
     }
-  }, [selectedTags, recipes]);
+
+    // Filtrando por nome
+    if (searchText) {
+      filtered = filtered.filter(recipe =>
+        recipe.name && recipe.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    setFilteredRecipes(filtered);
+  }, [selectedTags, recipes, searchText]); // Adicionado searchText na dependência
 
   const handleTagPress = (tag) => {
     setSelectedTags(prevTags =>
@@ -107,6 +116,9 @@ const Home = ({ navigation }) => {
                 style={styles.searchInput}
                 placeholder="Pesquise..."
                 placeholderTextColor="#f37e8f"
+                value={searchText} // Adicionado valor do texto de busca
+                onChangeText={setSearchText} // Atualiza o texto de busca
+                onSubmitEditing={() => {}} // Adiciona um handler para o envio do teclado
               />
               <View style={styles.iconContainer}>
                 <TouchableOpacity>
