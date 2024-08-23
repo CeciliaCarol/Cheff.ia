@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, onSnapshot, } from 'firebase/firestore';
+import { collection, onSnapshot, orderBy, query, } from 'firebase/firestore';
 import { TAGS } from '../constants';  // Importar as tags permanentes
 
 const Home = ({ navigation }) => {
@@ -22,7 +22,10 @@ const Home = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
+
+    const q = query(collection(db, 'receitas'), orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setRecipes(recipesList);
       setLoading(false);
@@ -231,8 +234,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   recipeItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     backgroundColor: '#fff',
     borderRadius: 20,
     elevation: 5,
@@ -253,8 +256,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   recipeImage: {
-    width: 150,
-    height: 200,
+    width: '100%',
+    height: 300,
     borderRadius: 20,
     marginRight: 10,
   },
@@ -306,6 +309,7 @@ const styles = StyleSheet.create({
   c_footer: {
     marginTop: 100,
     alignItems: 'center',
+    width: 360,
   },
   b_button: {
     backgroundColor: '#f58d94',

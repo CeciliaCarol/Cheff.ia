@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, Alert, Image } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, orderBy } from 'firebase/firestore';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
 
 const Receitas = ({ navigation }) => {
@@ -13,7 +13,9 @@ const Receitas = ({ navigation }) => {
 
   useEffect(() => {
     const userId = auth.currentUser.uid;
-    const q = query(collection(db, 'receitas'), where('userId', '==', userId));
+    const q = query(collection(db, 'receitas'),
+                    where('userId', '==', userId),
+                    orderBy('createdAt', 'desc'));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
