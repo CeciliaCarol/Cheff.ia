@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, onSnapshot, orderBy, query, } from 'firebase/firestore';
-import { TAGS } from '../constants';  // Importar as tags permanentes
+import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { TAGS } from '../constants';  // Certifique-se de que essas tags são as que você deseja
 
 const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [searchText, setSearchText] = useState(''); // Adicionado estado para o texto de busca
+  const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -22,10 +23,7 @@ const Home = ({ navigation }) => {
   };
 
   useEffect(() => {
-
-    const q = query(collection(db, 'receitas'), orderBy('createdAt', 'desc'));
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
       const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setRecipes(recipesList);
       setLoading(false);
@@ -34,39 +32,50 @@ const Home = ({ navigation }) => {
       setLoading(false);
     });
 
-    // Limpar o ouvinte quando o componente for desmontado
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const unsubscribe = onSnapshot(collection(db, 'favorites'), (querySnapshot) => {
+        const favoriteList = querySnapshot.docs.map(doc => doc.data().recipeId);
+        setFavorites(favoriteList);
+      });
+
+      return () => unsubscribe();
+    }
   }, []);
 
   useEffect(() => {
     let filtered = recipes;
 
-    // Filtrando por tags
     if (selectedTags.length > 0) {
       filtered = filtered.filter(recipe =>
         recipe.tags && recipe.tags.some(tag => selectedTags.includes(tag))
       );
 
-      // Ordena as receitas filtradas, priorizando as que têm tags selecionadas
       filtered = filtered.sort((a, b) => {
         const aHasTag = selectedTags.some(tag => a.tags.includes(tag));
         const bHasTag = selectedTags.some(tag => b.tags.includes(tag));
 
         if (aHasTag && !bHasTag) return -1;
         if (!aHasTag && bHasTag) return 1;
-        return 0; // Se ambos têm ou não têm tags, mantém a ordem original
+        return 0;
       });
     }
 
-    // Filtrando por nome
     if (searchText) {
       filtered = filtered.filter(recipe =>
         recipe.name && recipe.name.toLowerCase().includes(searchText.toLowerCase())
       );
     }
 
+    // Ordenar por data (mais recente primeiro)
+    filtered = filtered.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
+
     setFilteredRecipes(filtered);
-  }, [selectedTags, recipes, searchText]); // Adicionado searchText na dependência
+  }, [selectedTags, recipes, searchText]);
 
   const handleTagPress = (tag) => {
     setSelectedTags(prevTags =>
@@ -76,6 +85,18 @@ const Home = ({ navigation }) => {
 
   const handleLogout = () => {
     auth.signOut().then(() => navigation.navigate('Login'));
+  };
+
+  const handleFavoritePress = async (recipeId) => {
+    const user = auth.currentUser;
+    if (user) {
+      const favoriteRef = doc(db, 'favorites', recipeId);
+      if (favorites.includes(recipeId)) {
+        await deleteDoc(favoriteRef);
+      } else {
+        await setDoc(favoriteRef, { recipeId });
+      }
+    }
   };
 
   const renderTag = (tag) => (
@@ -104,6 +125,12 @@ const Home = ({ navigation }) => {
           <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
             <Text style={styles.viewDetails}>Ver Mais</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleFavoritePress(item.id)}>
+            <Image
+              source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
+              style={styles.favoriteIcon}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -119,9 +146,8 @@ const Home = ({ navigation }) => {
                 style={styles.searchInput}
                 placeholder="Pesquise..."
                 placeholderTextColor="#f37e8f"
-                value={searchText} // Adicionado valor do texto de busca
-                onChangeText={setSearchText} // Atualiza o texto de busca
-                onSubmitEditing={() => {}} // Adiciona um handler para o envio do teclado
+                value={searchText}
+                onChangeText={setSearchText}
               />
               <View style={styles.iconContainer}>
                 <TouchableOpacity>
@@ -138,6 +164,9 @@ const Home = ({ navigation }) => {
               <TouchableOpacity onPress={() => navigation.navigate('Receitas')} style={styles.dropdownItem}>
                 <Text style={styles.dropdownText}>Minhas Receitas</Text>
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Favoritos')} style={styles.dropdownItem}>
+                <Text style={styles.dropdownText}>Favoritos</Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={handleLogout} style={styles.dropdownItem}>
                 <Text style={styles.dropdownText}>Sair</Text>
               </TouchableOpacity>
@@ -149,7 +178,7 @@ const Home = ({ navigation }) => {
         </View>
 
         {loading ? (
-          <Text>Carregando...</Text>
+          <Text style={styles.loading}>Carregando...</Text>
         ) : filteredRecipes.length > 0 ? (
           <FlatList
             data={filteredRecipes}
@@ -157,7 +186,7 @@ const Home = ({ navigation }) => {
             renderItem={renderRecipeItem}
           />
         ) : (
-          <Text>Sem receitas disponíveis</Text>
+          <Text style={styles.noRecipes}>Sem receitas disponíveis</Text>
         )}
 
         <View style={styles.footer}>
@@ -171,6 +200,7 @@ const Home = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+   
   searchSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -234,8 +264,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   recipeItem: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 20,
     elevation: 5,
@@ -256,8 +286,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   recipeImage: {
-    width: '100%',
-    height: 300,
+    width: 150,
+    height: 200,
     borderRadius: 20,
     marginRight: 10,
   },
@@ -309,7 +339,6 @@ const styles = StyleSheet.create({
   c_footer: {
     marginTop: 100,
     alignItems: 'center',
-    width: 360,
   },
   b_button: {
     backgroundColor: '#f58d94',
