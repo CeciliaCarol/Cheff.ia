@@ -61,6 +61,7 @@ const Add = ({ navigation }) => {
         tags: selectedTags, // Usa as tags selecionadas
         createdAt: new Date(),
         imageUrl: imageUrl,
+        createdBy: user.displayName,
       });
 
       console.log('Receita adicionada com sucesso!');

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, } from 'firebase/firestore';
 import { TAGS } from '../constants';  // Importar as tags permanentes
 
 const Home = ({ navigation }) => {
