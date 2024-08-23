@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet,Alert, TouchableOpacity, Image } from 'react-native';
 import { auth, db } from '../firebaseConfig'; 
-import { createUserWithEmailAndPassword } from 'firebase/auth'; 
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; 
 import { doc, setDoc } from 'firebase/firestore'; 
 
 
@@ -27,6 +27,10 @@ export default function Register({ navigation }) {
       await setDoc(doc(db, 'users', user.uid), {
         name: name,
         email: email,
+      });
+
+      await updateProfile(user, {
+        displayName: name,
       });
 
       Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
