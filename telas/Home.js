@@ -22,6 +22,36 @@ const Home = ({ navigation }) => {
     setDropdownVisible(false);
   };
 
+  // Código para lidar com favoritos
+const handleFavoritePress = async (recipeId) => {
+  const user = auth.currentUser;
+  if (user) {
+    const favoriteRef = doc(collection(db, 'favorites'), `${user.uid}_${recipeId}`);
+    const exists = favorites.includes(recipeId);
+
+    if (exists) {
+      await deleteDoc(favoriteRef);
+    } else {
+      await setDoc(favoriteRef, { userId: user.uid, recipeId });
+    }
+  }
+};
+
+// Código para exibir o estado do favorito
+useEffect(() => {
+  const user = auth.currentUser;
+  if (user) {
+    const unsubscribe = onSnapshot(collection(db, 'favorites'), (querySnapshot) => {
+      const favoriteList = querySnapshot.docs
+        .filter(doc => doc.data().userId === user.uid)
+        .map(doc => doc.data().recipeId);
+      setFavorites(favoriteList);
+    });
+
+    return () => unsubscribe();
+  }
+}, []);
+
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
       const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -35,17 +65,6 @@ const Home = ({ navigation }) => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (user) {
-      const unsubscribe = onSnapshot(collection(db, 'favorites'), (querySnapshot) => {
-        const favoriteList = querySnapshot.docs.map(doc => doc.data().recipeId);
-        setFavorites(favoriteList);
-      });
-
-      return () => unsubscribe();
-    }
-  }, []);
 
   useEffect(() => {
     let filtered = recipes;
@@ -87,17 +106,8 @@ const Home = ({ navigation }) => {
     auth.signOut().then(() => navigation.navigate('Login'));
   };
 
-  const handleFavoritePress = async (recipeId) => {
-    const user = auth.currentUser;
-    if (user) {
-      const favoriteRef = doc(db, 'favorites', recipeId);
-      if (favorites.includes(recipeId)) {
-        await deleteDoc(favoriteRef);
-      } else {
-        await setDoc(favoriteRef, { recipeId });
-      }
-    }
-  };
+  
+
 
   const renderTag = (tag) => (
     <TouchableOpacity

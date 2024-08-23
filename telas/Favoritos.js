@@ -5,8 +5,7 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth } from '../firebaseConfig';
 
 const Favoritos = ({ navigation }) => {
-  const [favorites, setFavorites] = useState([]);
-  const [recipes, setRecipes] = useState([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -14,26 +13,25 @@ const Favoritos = ({ navigation }) => {
       // Buscar receitas favoritas do usuário
       const favoritesQuery = query(collection(db, 'favorites'), where('userId', '==', user.uid));
       const unsubscribeFavorites = onSnapshot(favoritesQuery, (querySnapshot) => {
-        const favoriteList = querySnapshot.docs.map(doc => doc.data().recipeId);
-        setFavorites(favoriteList);
+        const favoriteRecipeIds = querySnapshot.docs.map(doc => doc.data().recipeId);
+
+        if (favoriteRecipeIds.length > 0) {
+          // Buscar receitas com base nos IDs das favoritas
+          const recipesQuery = query(collection(db, 'receitas'), where('__name__', 'in', favoriteRecipeIds));
+          const unsubscribeRecipes = onSnapshot(recipesQuery, (recipeSnapshot) => {
+            const recipes = recipeSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setFavoriteRecipes(recipes);
+          });
+
+          return () => unsubscribeRecipes();
+        } else {
+          setFavoriteRecipes([]); // Nenhum favorito encontrado
+        }
       });
 
-      // Buscar todas as receitas
-      const recipesQuery = collection(db, 'receitas');
-      const unsubscribeRecipes = onSnapshot(recipesQuery, (querySnapshot) => {
-        const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setRecipes(recipesList);
-      });
-
-      return () => {
-        unsubscribeFavorites();
-        unsubscribeRecipes();
-      };
+      return () => unsubscribeFavorites();
     }
   }, []);
-
-  // Filtra as receitas favoritas
-  const favoriteRecipes = recipes.filter(recipe => favorites.includes(recipe.id));
 
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem}>
