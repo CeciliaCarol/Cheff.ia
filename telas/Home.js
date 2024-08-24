@@ -129,18 +129,19 @@ useEffect(() => {
     <View style={styles.recipeItem}>
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
+        <TouchableOpacity style={{alignSelf: 'flex-end'}} onPress={() => handleFavoritePress(item.id)}>
+          <Image
+            source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
+            style={styles.favoriteIcon}
+          />
+        </TouchableOpacity>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
         <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
         <View style={styles.c_footer}>
           <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
             <Text style={styles.viewDetails}>Ver Mais</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleFavoritePress(item.id)}>
-            <Image
-              source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
-              style={styles.favoriteIcon}
-            />
-          </TouchableOpacity>
+          
         </View>
       </View>
     </View>
@@ -210,6 +211,11 @@ useEffect(() => {
 };
 
 const styles = StyleSheet.create({
+
+  favoriteIcon: {
+    width: 40,
+    height: 40,
+  },
    
   searchSection: {
     flexDirection: 'row',
@@ -274,8 +280,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   recipeItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+  
     backgroundColor: '#fff',
     borderRadius: 20,
     elevation: 5,
@@ -296,8 +302,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   recipeImage: {
-    width: 150,
-    height: 200,
+    width: '100%',
+    height: 300,
     borderRadius: 20,
     marginRight: 10,
   },
