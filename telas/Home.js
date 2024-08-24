@@ -129,19 +129,18 @@ useEffect(() => {
     <View style={styles.recipeItem}>
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
-        <TouchableOpacity style={{alignSelf: 'flex-end'}} onPress={() => handleFavoritePress(item.id)}>
-          <Image
-            source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
-            style={styles.favoriteIcon}
-          />
-        </TouchableOpacity>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
         <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
         <View style={styles.c_footer}>
           <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
             <Text style={styles.viewDetails}>Ver Mais</Text>
           </TouchableOpacity>
-          
+          <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
+            <Image
+            source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
+            style={styles.favoriteIcon}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -211,10 +210,15 @@ useEffect(() => {
 };
 
 const styles = StyleSheet.create({
+  favoritoButton: {
+    borderRadius: 5,
+    marginLeft: 5,
+  },
 
   favoriteIcon: {
     width: 40,
     height: 40,
+    resizeMode: 'contain',
   },
    
   searchSection: {
@@ -353,15 +357,17 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   c_footer: {
-    marginTop: 100,
+    marginTop: 10,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   b_button: {
     backgroundColor: '#f58d94',
     padding: 5,
     borderRadius: 10,
     alignItems: 'center',
-    width: '100%',
+    width: 310,
   },
   content: {
     flex: 1,
