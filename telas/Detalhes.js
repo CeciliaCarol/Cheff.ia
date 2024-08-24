@@ -40,7 +40,7 @@ const Detalhes = ({ route }) => {
     <ScrollView contentContainerStyle={styles.container}>
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
-        <Text>Criado por:{recipe.createdBy}</Text>
+        <Text>Criado por: {recipe.createdBy}</Text>
         <Text style={styles.title}>{recipe.name}</Text>
         <Text style={styles.conteudo}>Ingredientes</Text>
         {recipe.ingredients?.length > 0 && recipe.ingredients.map((ingredient, index) => (

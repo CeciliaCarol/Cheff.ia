@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    overflow: 'visible',
   },
   menubutton: {
     padding: 2,
@@ -269,10 +270,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
-    zIndex: 1,
+    zIndex: 9999,
   },
   dropdownItem: {
     padding: 10,
+    zIndex: 999,
   },
   dropdownText: {
     fontSize: 20,
@@ -285,14 +287,14 @@ const styles = StyleSheet.create({
   },
   recipeItem: {
     flexDirection: 'column',
-  
     backgroundColor: '#fff',
     borderRadius: 20,
     elevation: 5,
     marginVertical: 8,
     padding: 10,
     margin: 15,
-    overflow: 'hidden',
+    overflow: 'visible',
+
   },
   recipeTitle: {
     color: '#333',

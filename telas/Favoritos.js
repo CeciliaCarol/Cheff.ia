@@ -66,33 +66,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    padding: 20,
+    
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
+    fontFamily:'PlayfairDisplay-Regular',
+    padding: 15,
   },
   recipeItem: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingBottom: 10,
+    flexDirection: 'column',
+    marginVertical: 8,
+    margin: 15,
+    padding: 10,
+    backgroundColor:'#fff',
+    borderRadius: 10,
+    elevation: 5,
   },
   recipeImage: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: 300,
     marginRight: 10,
     borderRadius: 8,
   },
   content: {
-    flex: 1,
-    justifyContent: 'center',
+    width: '100%',
   },
   recipeTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'PlayfairDisplay-Regular',
+    fontSize: 24,
+    padding: 5,
   },
   viewDetailsButton: {
     marginTop: 10,
@@ -103,6 +106,8 @@ const styles = StyleSheet.create({
   viewDetailsText: {
     color: '#FFF',
     textAlign: 'center',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 20,
   },
   noFavorites: {
     fontSize: 16,
