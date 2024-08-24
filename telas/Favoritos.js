@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#F58D96',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   viewDetailsText: {
     color: '#FFF',
