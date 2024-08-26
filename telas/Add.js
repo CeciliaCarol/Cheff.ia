@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     margin:20,
     fontFamily: 'PlayfairDisplay-Regular',
     color: '#333',
+    marginBottom: 100,
   },
   subtitle: {
     color: '#333',

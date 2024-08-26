@@ -66,13 +66,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    paddingTop: 25,
     
   },
   header: {
-    fontSize: 24,
+    fontSize: 25,
     marginBottom: 10,
     fontFamily:'PlayfairDisplay-Regular',
     padding: 15,
+    textAlign: 'center',
   },
   recipeItem: {
     flexDirection: 'column',

@@ -100,7 +100,7 @@ const Edit = ({ route, navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Editar Receita</Text>
+      <Text style={styles.title}>Edite sua Receita</Text>
       <Text style={styles.subtitle}>Nome da Receita</Text>
       <TextInput
         placeholder="Nome da Receita"
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     margin: 20,
     fontFamily: 'PlayfairDisplay-Regular',
     color: '#333',
+    marginBottom: 30,
   },
   subtitle: {
     color: '#333',

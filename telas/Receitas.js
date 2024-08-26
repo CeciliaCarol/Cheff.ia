@@ -150,13 +150,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    
+    marginTop: 25,
   },
   welcome: {
-    fontSize: 24,
+    fontSize: 25,
     marginBottom: 10,
     fontFamily:'PlayfairDisplay-Regular',
     padding: 15,
+    textAlign: 'center',
     
   },
 
