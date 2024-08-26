@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     backgroundColor: '#FFFFFF', // Cor de fundo da tela
+    marginTop: 25,
   },
   input: {
     height: 43,
@@ -131,7 +132,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
     fontFamily: 'Poppins-Bold',
-    fontSize: 16
+    fontSize: 16,
+    paddingTop: 140,
   },
 
   header: {

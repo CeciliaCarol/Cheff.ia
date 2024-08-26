@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: '#FFFFFF', // Cor de fundo da tela
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 25,
   },
   input: {
     height: 43,
@@ -109,6 +110,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 16,
     fontFamily: 'Poppins-Bold',
+    paddingTop: 210,
   },
   titulo: {
     color: '#333',
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontStyle: 'normal',
     fontFamily: 'PlayfairDisplay-Regular',
-    padding: 20,
+    padding: 30,
   },
   
 });
