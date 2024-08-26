@@ -246,6 +246,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     padding: 10,
+    paddingBottom: 20,
+    marginBottom: 35,
   },
   container: {
     flex: 1,

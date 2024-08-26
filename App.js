@@ -27,16 +27,47 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Register">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
+    <NavigationContainer >
+      <Stack.Navigator initialRouteName="Register" screenOptions={{
+        headerStyle: {
+          backgroundColor: '#f37e8f', // Cor da barra de navegação
+          elevation: 0,
+        },
+        headerTintColor: '#fff', // Cor da seta de navegação e ícones
+        headerTitle: '', // Deixa o título das telas vazio
+      }} >
+        <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
+        <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Add" component={Add} />
-        <Stack.Screen name="Edit" component={Edit} />
-        <Stack.Screen name="Receitas" component={Receitas} />
-        <Stack.Screen name="Detalhes" component={Detalhes} />
-        <Stack.Screen name="Favoritos" component={Favoritos} />
+        <Stack.Screen name="Add" component={Add} 
+        options={{
+          headerTransparent: true,
+          headerTintColor: '#000',
+        }} />
+        <Stack.Screen name="Edit" component={Edit} 
+        options={{
+          headerTransparent: true,
+          headerTintColor: '#000',
+        }}
+        />
+        <Stack.Screen name="Receitas" component={Receitas} 
+        options={{
+          headerTransparent: true,
+          headerTintColor: '#000',
+        }}
+        />
+        <Stack.Screen name="Detalhes" component={Detalhes}  
+        options={{
+            headerTransparent: true, // Torna a barra de navegação transparente
+            headerTintColor: '#fff', // Cor dos ícones na tela de detalhes
+        }}
+        />
+        <Stack.Screen name="Favoritos" component={Favoritos} 
+        options={{
+          headerTransparent: true,
+          headerTintColor: '#000',
+        }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
