@@ -100,6 +100,7 @@ const Detalhes = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    marginTop: 40,
   },
   content: {
     padding: 20,
@@ -124,8 +125,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     marginBottom: 5,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderRadius: 30,
   },
   ingredientItem: {
     fontSize: 16,

@@ -59,7 +59,7 @@ export default function App() {
         <Stack.Screen name="Detalhes" component={Detalhes}  
         options={{
             headerTransparent: true, // Torna a barra de navegação transparente
-            headerTintColor: '#fff', // Cor dos ícones na tela de detalhes
+            headerTintColor: '#000', // Cor dos ícones na tela de detalhes
         }}
         />
         <Stack.Screen name="Favoritos" component={Favoritos} 
