@@ -194,6 +194,7 @@ useEffect(() => {
             data={filteredRecipes}
             keyExtractor={(item) => item.id}
             renderItem={renderRecipeItem}
+            ListFooterComponent={<View style={{ height: 100 }} />} 
           />
         ) : (
           <Text style={styles.noRecipes}>Sem receitas disponíveis</Text>
