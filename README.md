@@ -26,7 +26,7 @@
 ## 👥 Equipe
 
 <ul>
-  <li><a href="link_do_perfil">Nome do Integrante</a> </li>
+  <li><a href="link_do_perfil">Isabela Alves</a> </li>
   <li><a href="link_do_perfil">Nome do Integrante</a> </li>
   <li><a href="link_do_perfil">Nome do Integrante</a> </li>
 </ul>
