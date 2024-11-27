@@ -12,6 +12,9 @@
   <li>Favoritar e salvar receitas.</li>
   <li>Filtros por tipo de prato, ingredientes e tags.</li>
   <li>Visualização e edição de receitas.</li>
+  <li>Perfil do usuário</li>
+  <li>Comentários e avaliações</li>
+  <li>Compartilhar receitas</li>
 </ul>
 
 ## 🚀 Tecnologias Utilizadas
