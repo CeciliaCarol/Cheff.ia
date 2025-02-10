@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, Button } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { TAGS } from '../constants';  // Certifique-se de que essas tags são as que você deseja
+import { TAGS } from '../constants';  
+import FormIngredientes from './FormIngredientes';
 
 const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -23,34 +24,34 @@ const Home = ({ navigation }) => {
   };
 
   // Código para lidar com favoritos
-const handleFavoritePress = async (recipeId) => {
-  const user = auth.currentUser;
-  if (user) {
-    const favoriteRef = doc(collection(db, 'favorites'), `${user.uid}_${recipeId}`);
-    const exists = favorites.includes(recipeId);
+  const handleFavoritePress = async (recipeId) => {
+    const user = auth.currentUser;
+    if (user) {
+      const favoriteRef = doc(collection(db, 'favorites'), `${user.uid}_${recipeId}`);
+      const exists = favorites.includes(recipeId);
 
-    if (exists) {
-      await deleteDoc(favoriteRef);
-    } else {
-      await setDoc(favoriteRef, { userId: user.uid, recipeId });
+      if (exists) {
+        await deleteDoc(favoriteRef);
+      } else {
+        await setDoc(favoriteRef, { userId: user.uid, recipeId });
+      }
     }
-  }
-};
+  };
 
-// Código para exibir o estado do favorito
-useEffect(() => {
-  const user = auth.currentUser;
-  if (user) {
-    const unsubscribe = onSnapshot(collection(db, 'favorites'), (querySnapshot) => {
-      const favoriteList = querySnapshot.docs
-        .filter(doc => doc.data().userId === user.uid)
-        .map(doc => doc.data().recipeId);
-      setFavorites(favoriteList);
-    });
+  // Código para exibir o estado do favorito
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const unsubscribe = onSnapshot(collection(db, 'favorites'), (querySnapshot) => {
+        const favoriteList = querySnapshot.docs
+          .filter(doc => doc.data().userId === user.uid)
+          .map(doc => doc.data().recipeId);
+        setFavorites(favoriteList);
+      });
 
-    return () => unsubscribe();
-  }
-}, []);
+      return () => unsubscribe();
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
@@ -64,7 +65,6 @@ useEffect(() => {
 
     return () => unsubscribe();
   }, []);
-
 
   useEffect(() => {
     let filtered = recipes;
@@ -106,9 +106,6 @@ useEffect(() => {
     auth.signOut().then(() => navigation.navigate('Login'));
   };
 
-  
-
-
   const renderTag = (tag) => (
     <TouchableOpacity
       key={tag}
@@ -137,8 +134,8 @@ useEffect(() => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
             <Image
-            source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
-            style={styles.favoriteIcon}
+              source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
+              style={styles.favoriteIcon}
             />
           </TouchableOpacity>
         </View>
@@ -182,11 +179,15 @@ useEffect(() => {
               </TouchableOpacity>
             </View>
           )}
+
+          {/* Formulário de Ingredientes aqui */}
+          <FormIngredientes />
+
           <ScrollView horizontal style={styles.tagContainer}>
             {TAGS.map(tag => renderTag(tag))}
           </ScrollView>
         </View>
-
+        <Button title="Gerar Receita" onPress={() => navigation.navigate('FormIngredientes')} />
         {loading ? (
           <Text style={styles.loading}>Carregando...</Text>
         ) : filteredRecipes.length > 0 ? (
@@ -194,7 +195,7 @@ useEffect(() => {
             data={filteredRecipes}
             keyExtractor={(item) => item.id}
             renderItem={renderRecipeItem}
-            ListFooterComponent={<View style={{ height: 100 }} />} 
+            ListFooterComponent={<View style={{ height: 100 }} />}
           />
         ) : (
           <Text style={styles.noRecipes}>Sem receitas disponíveis</Text>
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
     height: 40,
     resizeMode: 'contain',
   },
-   
+
   searchSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -272,115 +273,105 @@ const styles = StyleSheet.create({
     right: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
-    elevation: 5,
-    zIndex: 9999,
+    padding: 10,
+    elevation: 10,
+    width: 150,
   },
   dropdownItem: {
-    padding: 10,
-    zIndex: 999,
+    paddingVertical: 10,
   },
   dropdownText: {
-    fontSize: 20,
+    fontSize: 16,
     color: '#333',
-    fontFamily: 'Poppins-Regular',
-  },
-  welcome: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  recipeItem: {
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    elevation: 5,
-    marginVertical: 8,
-    padding: 10,
-    margin: 15,
-    overflow: 'visible',
-
-  },
-  recipeTitle: {
-    color: '#333',
-    fontSize: 24,
-    fontFamily: 'PlayfairDisplay-Regular',
-    alignSelf: 'flex-start',
-  },
-  viewDetails: {
-    color: '#fff',
-    fontFamily: 'Poppins-Regular',
-    fontSize: 20,
-  },
-  recipeImage: {
-    width: '100%',
-    height: 300,
-    borderRadius: 20,
-    marginRight: 10,
   },
   tagContainer: {
     flexDirection: 'row',
-    marginVertical: 10,
-    paddingHorizontal: 10,
+    marginTop: 10,
   },
   tag: {
-    backgroundColor: '#fff',
-    padding: 10,
-    marginHorizontal: 10,
-    borderRadius: 5,
-    textAlign: 'center',
+    backgroundColor: '#f37e8f',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    borderRadius: 20,
   },
   tagSelected: {
-    backgroundColor: 'pink',
+    backgroundColor: '#f4a1b2',
   },
   tagText: {
-    color: '#333',
-    fontFamily: 'Poppins-Regular',
-    fontSize: 16,
-  },
-  tagSelectedText: {
     color: '#fff',
   },
-  footer: {
-    width: 70,
-    height: 70,
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+  tagSelectedText: {
+    fontWeight: 'bold',
   },
-  icon: {
-    width: 60,
-    height: 60,
-  },
-  button: {
-    width: 70,
-    height: 70,
-    borderRadius: 40,
-    backgroundColor: '#F37E8F',
-    justifyContent: 'center',
-    alignItems: 'center',
+  recipeItem: {
+    flexDirection: 'row',
+    padding: 10,
+    marginBottom: 15,
+    backgroundColor: '#fff',
+    borderRadius: 10,
     elevation: 5,
   },
-  c_footer: {
-    marginTop: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  b_button: {
-    backgroundColor: '#f58d94',
-    padding: 5,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: 310,
+  recipeImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 5,
+    marginRight: 15,
   },
   content: {
     flex: 1,
   },
-  searchicon: {
+  recipeTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  c_footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  b_button: {
+    backgroundColor: '#f37e8f',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+  },
+  viewDetails: {
+    color: '#fff',
+  },
+  noRecipes: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 20,
+    color: '#888',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#f37e8f',
+    padding: 15,
+    borderRadius: 10,
+  },
+  icon: {
     width: 40,
     height: 40,
-    marginLeft: 10,
+    resizeMode: 'contain',
+  },
+  searchicon: {
+    width: 20,
+    height: 20,
+  },
+  loading: {
+    textAlign: 'center',
+    marginTop: 50,
+    fontSize: 18,
+    color: '#888',
   },
 });
 

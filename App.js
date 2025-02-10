@@ -9,8 +9,10 @@ import Edit from './telas/Edit';
 import Receitas from './telas/Receitas';
 import Detalhes from './telas/Detalhes';
 import Favoritos from './telas/Favoritos'; 
+import FormIngredientes from "./telas/FormIngredientes";
 import { ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
+
 
 const Stack = createStackNavigator();
 
@@ -27,16 +29,16 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="Register" screenOptions={{
         headerStyle: {
-          backgroundColor: '#f37e8f', // Cor da barra de navegação
+          backgroundColor: '#f37e8f',
           elevation: 0,
         },
-        headerTintColor: '#fff', // Cor da seta de navegação e ícones
-        headerTitle: '', // Deixa o título das telas vazio
+        headerTintColor: '#fff',
+        headerTitle: '', 
       }} >
-        <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
+        <Stack.Screen name="Login" component={Login} options={{headerShown: true}} />
         <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Add" component={Add} 
@@ -58,8 +60,8 @@ export default function App() {
         />
         <Stack.Screen name="Detalhes" component={Detalhes}  
         options={{
-            headerTransparent: true, // Torna a barra de navegação transparente
-            headerTintColor: '#000', // Cor dos ícones na tela de detalhes
+            headerTransparent: true,
+            headerTintColor: '#000',
         }}
         />
         <Stack.Screen name="Favoritos" component={Favoritos} 
@@ -67,6 +69,13 @@ export default function App() {
           headerTransparent: true,
           headerTintColor: '#000',
         }}
+        />
+        {/* Adicione a tela FormIngredientes no Stack Navigator */}
+        <Stack.Screen name="FormIngredientes" component={FormIngredientes} 
+          options={{
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }} 
         />
       </Stack.Navigator>
     </NavigationContainer>
