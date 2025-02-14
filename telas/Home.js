@@ -146,7 +146,7 @@ const Home = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
-      <AppLayouts>
+      <AppLayouts scrollable = {true}>
         <View style={styles.header}>
           <View style={styles.searchSection}>
             <View style={styles.pesquisa}>
