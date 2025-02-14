@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet,TouchableOpacity, Image } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import AppLayouts from '../componentes/AppLayouts';
 
 
 
@@ -23,7 +24,7 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <AppLayouts>
       <Image source={require('../assets/imagens/logo.png')} style={styles.image}/>
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
@@ -51,19 +52,11 @@ const Login = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.link}>Não tem uma conta? Registre-se</Text>
       </TouchableOpacity>
-    </View>
+    </AppLayouts>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: 20,
-    backgroundColor: '#FFFFFF', // Cor de fundo da tela
-    alignItems: 'center',
-    marginTop: 25,
-  },
   input: {
     height: 43,
     width: '100%', // Largura total do campo de entrada

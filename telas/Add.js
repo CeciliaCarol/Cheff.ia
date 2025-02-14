@@ -4,6 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
+import AppLayouts from '../componentes/AppLayouts';
+import Input from '../componentes/Inputs';
 
 const tagsList = ['Doce', 'Salgado', 'Vegano', 'Vegetariano', 'Sem Lactose'];
 
@@ -80,10 +82,10 @@ const Add = ({ navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <AppLayouts scrollable = {true}>
       <Text style={styles.title}>Crie sua receita</Text>
       <Text style={styles.subtitle}>Nome de Receita</Text>
-      <TextInput
+      <Input
         placeholder="Nome da Receita"
         placeholderTextColor={'#F37E8F'}
         value={recipeName}
@@ -91,7 +93,7 @@ const Add = ({ navigation }) => {
         style={styles.input}
       />
       <Text style={styles.subtitle}>Ingredientes</Text>
-      <TextInput
+      <Input
         placeholder="Ingredientes (separados por vírgula)"
         value={ingredients}
         placeholderTextColor={'#F37E8F'}
@@ -100,7 +102,7 @@ const Add = ({ navigation }) => {
         multiline={true}
       />
       <Text style={styles.subtitle}>Passo a Passo</Text>
-      <TextInput
+      <Input
         placeholder="Instruções"
         value={instructions}
         placeholderTextColor={'#F37E8F'}
@@ -132,7 +134,7 @@ const Add = ({ navigation }) => {
       <TouchableOpacity onPress={handleAddRecipe}>
         <Text style={styles.buttonAdd}>Criar</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </AppLayouts>
   );
 };
 
@@ -152,18 +154,7 @@ const styles = StyleSheet.create({
     fontFamily:'Poppins-Regular',
     alignSelf: 'flex-start',
   },
-  container: {
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#F37E8F',
-    padding: 10,
-    margin: 15,
-    borderRadius: 10,
-    marginTop: 2,
-  },
+
   image: {
     width: 100,
     height: 100,

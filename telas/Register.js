@@ -4,6 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet,Alert, TouchableOpacity, Imag
 import { auth, db } from '../firebaseConfig'; 
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; 
 import { doc, setDoc } from 'firebase/firestore'; 
+import AppLayouts from '../componentes/AppLayouts';
 
 
 
@@ -47,7 +48,7 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <AppLayouts>
       <Image source={require('../assets/imagens/logo.png')} style={styles.image}/>
       
       <Text style={styles.titulo}>Crie e Encontre
@@ -83,19 +84,11 @@ export default function Register({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.link}>Já tem uma conta? Faça login</Text>
       </TouchableOpacity>
-    </View>
+    </AppLayouts>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: 20,
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF', // Cor de fundo da tela
-    marginTop: 25,
-  },
   input: {
     height: 43,
     width: '100%', // Largura total do campo de entrada

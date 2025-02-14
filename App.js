@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import Welcome from './telas/Welcome';
 import Register from './telas/Register';
 import Login from './telas/Login';
 import Home from './telas/Home';  
@@ -30,15 +31,11 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Register" screenOptions={{
-        headerStyle: {
-          backgroundColor: '#f37e8f',
-          elevation: 0,
-        },
-        headerTintColor: '#fff',
-        headerTitle: '', 
+      <Stack.Navigator initialRouteName="Welcome" screenOptions={{
+        headerTintColor: '#fff', 
       }} >
-        <Stack.Screen name="Login" component={Login} options={{headerShown: true}} />
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Add" component={Add} 

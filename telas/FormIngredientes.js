@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import axios from 'axios';
+import AppLayouts from '../componentes/AppLayouts';
 
 function FormIngredientes() {
   const [ingredientes, setIngredientes] = useState('');
@@ -31,7 +32,7 @@ function FormIngredientes() {
   };
 
   return (
-    <View style={styles.container}>
+    <AppLayouts>
       <Text style={styles.title}>Gerar Receita</Text>
       <TextInput
         style={styles.input}
@@ -56,18 +57,11 @@ function FormIngredientes() {
           <Text style={styles.receita}>{receita}</Text>
         </View>
       )}
-    </View>
+    </AppLayouts>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
