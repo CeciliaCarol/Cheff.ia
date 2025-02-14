@@ -26,9 +26,8 @@ const Login = ({ navigation }) => {
 
   return (
     <AppLayouts>
-      <Image source={require('../assets/imagens/logo.png')} style={styles.image}/>
-      <Text style={styles.titulo}>Crie e Encontre
-      Suas Receitas Favoritas</Text>
+      <Image source={require('../assets/imagens/green.png')} style={styles.padrao}/>
+      <Image source={require('../assets/imagens/logo.png')} style={styles.logo}/>
       <Text style={styles.header}>Email</Text>
       <Input
         placeholder="Email"
@@ -68,8 +67,8 @@ const styles = StyleSheet.create({
     color: '#000000', // Cor do texto dentro do campo de entrada
   },
   button: {
-    backgroundColor: '#F37E8F', // Cor de fundo do botão
-    borderRadius: 10, // Arredondamento das bordas do botão
+    backgroundColor: '#F17166', // Cor de fundo do botão
+    borderRadius: 30, // Arredondamento das bordas do botão
     paddingVertical: 5,
     paddingHorizontal: 20,
     alignItems: 'center',
@@ -79,7 +78,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white', // Cor do texto dentro do botão
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Poppins-Bold',
 
   },
@@ -96,21 +95,24 @@ const styles = StyleSheet.create({
   },
   
   link: {
-    color: '#F37E8F', // Cor do link para a tela de login
+    color: '#015927', // Cor do link para a tela de login
     marginTop: 12,
     textAlign: 'center',
     textDecorationLine: 'underline',
     fontSize: 16,
     fontFamily: 'Poppins-Bold',
-    paddingTop: 210,
+    paddingTop: 100,
   },
-  titulo: {
-    color: '#333',
-    textAlign: 'center',
-    fontSize: 40,
-    fontStyle: 'normal',
-    fontFamily: 'PlayfairDisplay-Regular',
-    padding: 30,
+  logo: {
+    width: 300,
+    height: 100,
+    resizeMode: "contain",
+    margin: 50,
+  },
+  patternImage: {
+    width: '100%',
+    height: 250,
+    top: 0,
   },
   
 });

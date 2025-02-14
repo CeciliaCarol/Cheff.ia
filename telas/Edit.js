@@ -7,6 +7,7 @@ import { app } from '../firebaseConfig';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import AppLayouts from '../componentes/AppLayouts';
 import Input from '../componentes/Inputs';
+import Buttons from '../componentes/Buttons';
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -141,13 +142,15 @@ const Edit = ({ route, navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-      <TouchableOpacity onPress={handleSelectImage}>
-        <Text style={styles.buttonImg}>Alterar Imagem</Text>
-      </TouchableOpacity>
+
+      <Buttons onPress={handleSelectImage}
+      title="Alterar Imagem"
+      />
       {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
       <TouchableOpacity onPress={handleUpdateRecipe}>
         <Text style={styles.buttonAdd}>Atualizar</Text>
       </TouchableOpacity>
+      
     </AppLayouts>
   );
 };
@@ -177,10 +180,10 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     color: '#fff',
-    backgroundColor: '#F37E8F',
+    backgroundColor: '#F17166',
     padding: 8,
     textAlign: 'center',
-    borderRadius: 10,
+    borderRadius: 30,
     fontSize: 20,
     marginHorizontal: 120,
     marginTop: 50,

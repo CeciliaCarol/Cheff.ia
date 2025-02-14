@@ -6,6 +6,7 @@ import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import AppLayouts from '../componentes/AppLayouts';
 import Input from '../componentes/Inputs';
+import Buttons from '../componentes/Buttons';
 
 const tagsList = ['Doce', 'Salgado', 'Vegano', 'Vegetariano', 'Sem Lactose'];
 
@@ -127,9 +128,8 @@ const Add = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-      <TouchableOpacity onPress={handlePickImage}>
-        <Text style={styles.buttonImg}>Adicionar Imagem</Text>
-      </TouchableOpacity>
+      <Buttons onPress={handlePickImage}
+      title="Adicionar Imagem"/>
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
       <TouchableOpacity onPress={handleAddRecipe}>
         <Text style={styles.buttonAdd}>Criar</Text>
@@ -164,23 +164,13 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     color: '#fff',
-    backgroundColor: '#F37E8F',
+    backgroundColor: '#F17166',
     padding: 8,
     textAlign: 'center',
-    borderRadius: 10,
+    borderRadius: 30,
     fontSize: 20,
     marginHorizontal: 120,
     marginTop: 50,
-    fontFamily: 'Poppins-SemiBold',
-  },
-  buttonImg: {
-    margin: 15,
-    color:'#333',
-    backgroundColor: '#F9E6D8',
-    padding: 8,
-    borderRadius: 10,
-    textAlign: 'center',
-    fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
   },
   tagsContainer: {

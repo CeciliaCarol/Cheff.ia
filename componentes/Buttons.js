@@ -20,9 +20,9 @@ const styles = StyleSheet.create({
         width:'100%',
     },
     text: {
-        fontSize: 24,
-        fontWeight: "bold",
+        fontSize: 20,
         color: '#fff',
+        fontFamily: 'Poppins-Bold',
     },
 });
 

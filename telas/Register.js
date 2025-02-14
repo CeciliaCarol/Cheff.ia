@@ -50,10 +50,9 @@ export default function Register({ navigation }) {
 
   return (
     <AppLayouts>
-      <Image source={require('../assets/imagens/logo.png')} style={styles.image}/>
+      <Image source={require('../assets/imagens/green.png')} style={styles.padrao} />
+      <Image source={require('../assets/imagens/logo.png')} style={styles.logo} />
       
-      <Text style={styles.titulo}>Crie e Encontre
-      Suas Receitas Favoritas</Text>
       <Text style={styles.header}>Nome</Text>
       <Input
         placeholder="Nome"
@@ -87,34 +86,42 @@ export default function Register({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  patternImage: {
+    width: '100%',
+    height: 250,
+    top: 0,
+  },
+  logo: {
+    width: 300,
+    height: 100,
+    resizeMode: "contain",
+    margin: 50,
+  },
   
   button: {
-    backgroundColor: '#F37E8F', // Cor de fundo do botão
-    borderRadius: 10, // Arredondamento das bordas do botão
+    backgroundColor: '#F17166', // Cor de fundo do botão
+    borderRadius: 30, // Arredondamento das bordas do botão
     paddingVertical: 5,
     paddingHorizontal: 20,
     alignItems: 'center',
     marginBottom: 10,
     marginTop: 20,
-    width:'100%',
-    
-    
+    width:'100%',    
   },
   buttonText: {
     color: 'white', // Cor do texto dentro do botão
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Poppins-Bold',
-    
 
   },
   link: {
-    color: '#F37E8F', // Cor do link para a tela de login
+    color: '#015927', // Cor do link para a tela de login
     marginTop: 12,
     textAlign: 'center',
     textDecorationLine: 'underline',
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
-    paddingTop: 140,
+    paddingTop: 50,
   },
 
   header: {
@@ -125,13 +132,5 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
   },
   
-  titulo: {
-    color: '#333',
-    textAlign: 'center',
-    fontSize: 40,
-    fontStyle: 'normal',
-    fontFamily: 'PlayfairDisplay-Regular',
-    padding: 20,
-  },
 
 });

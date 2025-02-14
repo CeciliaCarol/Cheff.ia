@@ -22,7 +22,9 @@ const Welcome = ({ navigation }) => {
         title="Cadastrar"
         onPress={() => navigation.navigate('Register')} 
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button}
+        onPress={() => navigation.navigate('Login')}
+        >
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
         
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'PlayfairDisplay-Regular',
     textAlign: 'center',
     marginBottom: 150,
     color: '#333',
@@ -62,8 +64,8 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: '#fff',
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontFamily: 'Poppins-Bold',
   },
 });
 

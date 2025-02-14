@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import axios from 'axios';
 import AppLayouts from '../componentes/AppLayouts';
+import Input from '../componentes/Inputs';
+import Buttons from '../componentes/Buttons';
 
 function FormIngredientes() {
   const [ingredientes, setIngredientes] = useState('');
@@ -34,22 +36,19 @@ function FormIngredientes() {
   return (
     <AppLayouts>
       <Text style={styles.title}>Gerar Receita</Text>
-      <TextInput
+      <Input
         style={styles.input}
         value={ingredientes}
         onChangeText={setIngredientes}
         placeholder="Exemplo: frango, batata, cebola"
         placeholderTextColor="#999"
       />
-      <TouchableOpacity
+      <Buttons
         style={styles.button}
         onPress={handleSubmit}
         disabled={loading}
-      >
-        <Text style={styles.buttonText}>
-          {loading ? 'Gerando...' : 'Gerar Receita'}
-        </Text>
-      </TouchableOpacity>
+        title="Gerar Receita"
+      />
       {loading && <ActivityIndicator size="large" color="#f37e8f" />}
       {receita && (
         <View style={styles.receitaContainer}>
@@ -68,27 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: '#f37e8f',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    marginBottom: 20,
-    color: '#333',
-  },
-  button: {
-    backgroundColor: '#f37e8f',
-    padding: 10,
-    borderRadius: 5,
-    width: '100%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
+  
   receitaContainer: {
     marginTop: 20,
     width: '100%',
