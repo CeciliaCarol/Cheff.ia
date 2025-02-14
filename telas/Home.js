@@ -6,6 +6,7 @@ import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firesto
 import { TAGS } from '../constants';  
 import FormIngredientes from './FormIngredientes';
 import AppLayouts from '../componentes/AppLayouts';
+import Navbar from '../componentes/Navbar';
 
 const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -207,6 +208,7 @@ const Home = ({ navigation }) => {
             <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
           </TouchableOpacity>
         </View>
+        <Navbar/>
       </AppLayouts>
     </TouchableWithoutFeedback>
   );
@@ -272,6 +274,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 10,
     width: 150,
+    zIndex: 1000,
   },
   dropdownItem: {
     paddingVertical: 10,
