@@ -7,7 +7,7 @@ const AppLayouts = ({ children, scrollable = false }) => {
             {children}
         </ScrollView>
         ) : (
-        <View Style={Styles.container}>{children}</View>
+        <View style={Styles.container}>{children}</View>
         );
 };
 
@@ -21,9 +21,7 @@ const Styles = StyleSheet.create({
     },
     scrollContainer: {
         flexGrow: 1,
-        paddingRight: 30,
-        paddingBottom: 20,
-        paddingTop: 20,
+        padding: 10,
         backgroundColor: '#FFFFFF',
     },
 });

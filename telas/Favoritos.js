@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react
 import { db } from '../firebaseConfig';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth } from '../firebaseConfig';
+import AppLayouts from '../componentes/AppLayouts';
 
 const Favoritos = ({ navigation }) => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
@@ -47,7 +48,7 @@ const Favoritos = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <AppLayouts scrollable = {true}>
       <Text style={styles.header}>Receitas Favoritas</Text>
       {favoriteRecipes.length > 0 ? (
         <FlatList
@@ -58,7 +59,7 @@ const Favoritos = ({ navigation }) => {
       ) : (
         <Text style={styles.noFavorites}>Você ainda não tem receitas favoritas.</Text>
       )}
-    </View>
+    </AppLayouts>
   );
 };
 

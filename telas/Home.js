@@ -5,6 +5,7 @@ import { db } from '../firebaseConfig';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { TAGS } from '../constants';  
 import FormIngredientes from './FormIngredientes';
+import AppLayouts from '../componentes/AppLayouts';
 
 const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -145,7 +146,7 @@ const Home = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
-      <View style={styles.container}>
+      <AppLayouts>
         <View style={styles.header}>
           <View style={styles.searchSection}>
             <View style={styles.pesquisa}>
@@ -206,7 +207,7 @@ const Home = ({ navigation }) => {
             <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
           </TouchableOpacity>
         </View>
-      </View>
+      </AppLayouts>
     </TouchableWithoutFeedback>
   );
 };
@@ -250,11 +251,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingBottom: 20,
     marginBottom: 35,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    overflow: 'visible',
   },
   menubutton: {
     padding: 2,
@@ -347,9 +343,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },

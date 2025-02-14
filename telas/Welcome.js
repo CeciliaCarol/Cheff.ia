@@ -4,7 +4,7 @@ import AppLayouts from '../componentes/AppLayouts';
 
 const Welcome = ({ navigation }) => {
   return (
-    <AppLayouts>
+    <AppLayouts scrollable = {true}>
       
 
       {/* Texto abaixo da logo */}
