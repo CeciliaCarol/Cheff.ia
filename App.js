@@ -34,7 +34,11 @@ export default function App() {
       <Stack.Navigator initialRouteName="Welcome" screenOptions={{
         headerTintColor: '#fff', 
       }} >
-        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Welcome" component={Welcome} 
+        options={{
+          headerTransparent: true,
+          headerTintColor: 'transparent',
+        }} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={Home} />

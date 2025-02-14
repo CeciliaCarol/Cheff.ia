@@ -4,6 +4,7 @@ import { View, TextInput, Button, Text, StyleSheet,TouchableOpacity, Image } fro
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import AppLayouts from '../componentes/AppLayouts';
+import Input from '../componentes/Inputs';
 
 
 
@@ -29,16 +30,14 @@ const Login = ({ navigation }) => {
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
       <Text style={styles.header}>Email</Text>
-      <TextInput
-        style={styles.input}
+      <Input
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         placeholderTextColor="#808080" // Cor do texto do placeholder
       />
       <Text style={styles.header}>Senha</Text>
-      <TextInput
-        style={styles.input}
+      <Input
         placeholder="Senha"
         secureTextEntry
         value={password}

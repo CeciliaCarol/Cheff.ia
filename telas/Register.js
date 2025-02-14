@@ -5,6 +5,7 @@ import { auth, db } from '../firebaseConfig';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; 
 import { doc, setDoc } from 'firebase/firestore'; 
 import AppLayouts from '../componentes/AppLayouts';
+import Input from '../componentes/Inputs';
 
 
 
@@ -54,24 +55,21 @@ export default function Register({ navigation }) {
       <Text style={styles.titulo}>Crie e Encontre
       Suas Receitas Favoritas</Text>
       <Text style={styles.header}>Nome</Text>
-      <TextInput
-        style={styles.input}
+      <Input
         placeholder="Nome"
         value={name}
         onChangeText={setName}
         placeholderTextColor="#808080" // Cor do texto do placeholder
       />
       <Text style={styles.header}>Email</Text>
-      <TextInput
-        style={styles.input}
+      <Input
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         placeholderTextColor="#808080" // Cor do texto do placeholder
       />
       <Text style={styles.header}>Senha</Text>
-      <TextInput
-        style={styles.input}
+      <Input
         placeholder="Senha"
         secureTextEntry
         value={password}
@@ -89,17 +87,7 @@ export default function Register({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    height: 43,
-    width: '100%', // Largura total do campo de entrada
-    borderColor:  '#F37E8F', // Cor da borda
-    borderWidth: 1,
-    borderRadius: 10, // Arredondamento das bordas
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff', // Cor de fundo do campo de entrada
-    color: '#000000', // Cor do texto dentro do campo de entrada
-  },
+  
   button: {
     backgroundColor: '#F37E8F', // Cor de fundo do botão
     borderRadius: 10, // Arredondamento das bordas do botão

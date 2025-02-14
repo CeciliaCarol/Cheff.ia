@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import AppLayouts from '../componentes/AppLayouts';
+import Buttons  from '../componentes/Buttons';
 
 const Welcome = ({ navigation }) => {
   return (
-    <AppLayouts scrollable = {true}>
-      
+    <AppLayouts>
+      <Image source={require("../assets/imagens/green.png")} style={styles.padrao}/>
+
+      <Image source={require("../assets/imagens/logo.png")} style={styles.logo}/>
 
       {/* Texto abaixo da logo */}
       <Text style={styles.welcomeText}>
@@ -14,21 +17,15 @@ const Welcome = ({ navigation }) => {
       </Text>
 
       {/* Botões */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={() => navigation.navigate('Register')}
-        >
-          <Text style={styles.buttonText}>Crie sua conta</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={() => navigation.navigate('Login')}
-        >
+
+        <Buttons 
+        title="Cadastrar"
+        onPress={() => navigation.navigate('Register')} 
+        />
+        <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
-      </View>
+        
     </AppLayouts>
   );
 };
@@ -36,39 +33,37 @@ const Welcome = ({ navigation }) => {
 const styles = StyleSheet.create({
   patternImage: {
     width: '100%',
-    height: 150,
-    position: 'absolute',
+    height: 250,
     top: 0,
   },
   logo: {
-    width: 150,
-    height: 150,
-    marginTop: 100,
+    width: 300,
+    height: 100,
+    resizeMode: "contain",
+    margin: 50,
   },
   welcomeText: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 150,
     color: '#333',
   },
-  buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
+
   button: {
-    backgroundColor: '#007BFF',
-    padding: 15,
-    width: '80%',
-    marginBottom: 10,
-    borderRadius: 30,
-    alignItems: 'center',
+    backgroundColor: '#F17166', // Cor de fundo do botão
+        borderRadius: 30, //rredondamento das bordas do botão
+        padding: 10,
+        alignItems: 'center',
+        marginBottom: 10,
+        marginTop: 20,
+        width:'100%',
   },
+
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: "bold",
   },
 });
 

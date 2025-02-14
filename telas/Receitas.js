@@ -4,6 +4,7 @@ import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
 import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, orderBy } from 'firebase/firestore';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
+import AppLayouts from '../componentes/AppLayouts';
 
 const Receitas = ({ navigation }) => {
   const [userRecipes, setUserRecipes] = useState([]);
@@ -107,7 +108,7 @@ const Receitas = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <AppLayouts scrollable = {true}>
       <Text style={styles.welcome}>Minhas Receitas</Text>
       {loading ? (
         <Text>Carregando...</Text>
@@ -142,16 +143,12 @@ const Receitas = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </View>
+      </AppLayouts>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginTop: 25,
-  },
+ 
   welcome: {
     fontSize: 25,
     marginBottom: 10,

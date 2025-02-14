@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { doc, getDoc, collection, query, where, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore';
+import AppLayouts from '../componentes/AppLayouts';
 
 const Detalhes = ({ route }) => {
   const { recipeId } = route.params;
@@ -71,7 +72,7 @@ const Detalhes = ({ route }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <AppLayouts scrollable = {true}>
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <View style={styles.header}>
@@ -93,7 +94,7 @@ const Detalhes = ({ route }) => {
         <Text style={styles.conteudo}>Instruções</Text>
         <Text>{recipe.instructions}</Text>
       </View>
-    </ScrollView>
+      </AppLayouts>
   );
 };
 

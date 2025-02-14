@@ -22,6 +22,7 @@ const Styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         padding: 10,
+        paddingTop: 30,
         backgroundColor: '#FFFFFF',
     },
 });

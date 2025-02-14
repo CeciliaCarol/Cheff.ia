@@ -5,6 +5,8 @@ import { getFirestore, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebaseConfig'; 
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import AppLayouts from '../componentes/AppLayouts';
+import Input from '../componentes/Inputs';
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -99,32 +101,29 @@ const Edit = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <AppLayouts scrollable = {true}>
       <Text style={styles.title}>Edite sua Receita</Text>
       <Text style={styles.subtitle}>Nome da Receita</Text>
-      <TextInput
+      <Input
         placeholder="Nome da Receita"
         placeholderTextColor={'#F37E8F'}
         value={recipe.name}
         onChangeText={text => setRecipe({...recipe, name: text})}
-        style={styles.input}
       />
       <Text style={styles.subtitle}>Ingredientes</Text>
-      <TextInput
+      <Input
         placeholder="Ingredientes (separados por vírgula)"
         value={recipe.ingredients}
         placeholderTextColor={'#F37E8F'}
         onChangeText={text => setRecipe({...recipe, ingredients: text})}
-        style={styles.input}
         multiline={true}
       />
       <Text style={styles.subtitle}>Passo a Passo</Text>
-      <TextInput
+      <Input
         placeholder="Instruções"
         value={recipe.instructions}
         placeholderTextColor={'#F37E8F'}
         onChangeText={text => setRecipe({...recipe, instructions: text})}
-        style={styles.input}
         multiline={true}
       />
       <Text style={styles.subtitle}>Tags</Text>
@@ -149,7 +148,7 @@ const Edit = ({ route, navigation }) => {
       <TouchableOpacity onPress={handleUpdateRecipe}>
         <Text style={styles.buttonAdd}>Atualizar</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </AppLayouts>
   );
 };
 
@@ -168,18 +167,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontFamily: 'Poppins-Regular',
     alignSelf: 'flex-start',
-  },
-  container: {
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#F37E8F',
-    padding: 10,
-    margin: 15,
-    borderRadius: 10,
-    marginTop: 2,
   },
   image: {
     width: 100,
