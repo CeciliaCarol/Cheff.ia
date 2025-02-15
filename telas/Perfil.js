@@ -106,7 +106,7 @@ const Perfil = () => {
           <View style={styles.optioncontent}>
              <View style={styles.content}>
                 <Text style={styles.legenda}>Minhas Receitas</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Receitas')}>
                 <Ionicons name="chevron-forward" size={30} color="black"/>
                 </TouchableOpacity>
              </View>
