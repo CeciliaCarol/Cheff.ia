@@ -11,8 +11,10 @@ import Receitas from './telas/Receitas';
 import Detalhes from './telas/Detalhes';
 import Favoritos from './telas/Favoritos'; 
 import FormIngredientes from "./telas/FormIngredientes";
+import Perfil from "./telas/Perfil";
 import { ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
+import Navbar from "./componentes/Navbar";
 
 
 const Stack = createStackNavigator();
@@ -81,6 +83,11 @@ export default function App() {
             headerTransparent: true,
             headerTintColor: '#000',
           }} 
+        />
+        <Stack.Screen name="Perfil" component={Perfil}
+        options={{
+          headerShown: false,
+        }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Modal, Text, Pressable } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Navbar = () => {
     const [modalVisible, setModalVisible] = useState(false);
+    const navigation = useNavigation();
 
     return (
         <>
         {/* Navbar*/}
 
         <View style={styles.navbar}>
-            <TouchableOpacity style={styles.navButton}>
+            <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
                 <Ionicons name="home-outline" size={24} color="black"/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navButton}>
+            <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Favoritos')}>
                 <Ionicons name="heart-outline" size={24} color="black"/>
             </TouchableOpacity>
 
@@ -29,7 +31,7 @@ const Navbar = () => {
                 <Ionicons name="bookmark-outline" size={24} color="black"/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navButton}>
+            <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Perfil')}>
                 <Ionicons name="person-outline" size={24} color="black"/>
             </TouchableOpacity>
         </View>
@@ -53,6 +55,7 @@ const Navbar = () => {
                     
                     <TouchableOpacity
                     style={styles.optionButton}
+                    onPress={() => navigation.navigate('Add')}
                     >
                         <Ionicons name="book-outline" size={40} color="black"/>
                     </TouchableOpacity>
@@ -62,22 +65,12 @@ const Navbar = () => {
                     <View style={styles.optionContainer}>
                     <TouchableOpacity
                     style={styles.optionButton}
-                    onPress={() => {
-                        setModalVisible(false);
-                        console.log("Criar com IA");
-                    }}
+                    onPress={() => navigation.navigate('FormIngredientes')}
                     >
                         <Ionicons name="bulb-outline" size={40} color="black"/>
                     </TouchableOpacity>
                     <Text style={styles.modalButtonText}>Criar com IA</Text>
                     </View>
-                  {/*  <Pressable
-                    style={styles.cancelButton}
-                    onPress={() => 
-                        setModalVisible(false)}
-                    >
-                        <Text style={styles.modalButtonText}>Cancelar</Text>
-                    </Pressable>*/}
                 </View>
             </View>
             </TouchableOpacity>
@@ -88,8 +81,8 @@ const Navbar = () => {
 
 const styles = StyleSheet.create({
     navbar: {
-        position: "fixed",
-        bottom: 0,
+        position: "absolute",
+        bottom: 10,
         width: "100%",
         backgroundColor: "#fff",
         height: 70,
