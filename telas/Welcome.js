@@ -5,7 +5,7 @@ import Buttons  from '../componentes/Buttons';
 
 const Welcome = ({ navigation }) => {
   return (
-    <AppLayouts>
+    <AppLayouts hideNavbar={true}>
       <Image source={require("../assets/imagens/green.png")} style={styles.padrao}/>
 
       <Image source={require("../assets/imagens/logo.png")} style={styles.logo}/>
