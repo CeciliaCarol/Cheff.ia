@@ -4,7 +4,7 @@ import { db } from '../firebaseConfig';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth } from '../firebaseConfig';
 import AppLayouts from '../componentes/AppLayouts';
-import Navbar from '../componentes/Navbar';
+
 
 const Favoritos = ({ navigation }) => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
@@ -60,7 +60,7 @@ const Favoritos = ({ navigation }) => {
       ) : (
         <Text style={styles.noFavorites}>Você ainda não tem receitas favoritas.</Text>
       )}
-      <Navbar/>
+     
     </AppLayouts>
   );
 };
