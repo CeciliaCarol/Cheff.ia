@@ -72,7 +72,7 @@ const Detalhes = ({ route }) => {
   }
 
   return (
-    <AppLayouts scrollable = {true}>
+    <AppLayouts hideNavbar={true} scrollable={true}>
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <View style={styles.header}>
