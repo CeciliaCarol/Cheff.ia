@@ -20,7 +20,7 @@ function FormIngredientes() {
     setLoading(true);
     try {
       // Faz a requisição para o servidor
-      const response = await axios.post('http://192.168.0.101:5000/gerar-receita', {
+      const response = await axios.post('http://192.168.1.13:5000/gerar-receita', {
         ingredientes: ingredientes.split(',').map((item) => item.trim()), // Separa e limpa os ingredientes
       });
 
@@ -34,7 +34,7 @@ function FormIngredientes() {
   };
 
   return (
-    <AppLayouts>
+    <AppLayouts hideNavbar={true}>
       <Text style={styles.title}>Gerar Receita</Text>
       <Input
         style={styles.input}
