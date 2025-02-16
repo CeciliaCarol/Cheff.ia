@@ -5,7 +5,7 @@ import { db } from '../firebaseConfig';
 import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, orderBy } from 'firebase/firestore';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
 import AppLayouts from '../componentes/AppLayouts';
-import Navbar from '../componentes/Navbar';
+
 
 const Receitas = ({ navigation }) => {
   const [userRecipes, setUserRecipes] = useState([]);
@@ -144,7 +144,7 @@ const Receitas = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-      <Navbar/>
+      
       </AppLayouts>
   );
 };
@@ -275,6 +275,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 10,
   },
+  
+  
 });
 
 export default Receitas;
