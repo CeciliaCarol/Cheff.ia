@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet, Modal, Text, Pressable } from "reac
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
+
 const Navbar = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const navigation = useNavigation();
@@ -81,9 +82,10 @@ const Navbar = () => {
 
 const styles = StyleSheet.create({
     navbar: {
+        height: 70,  // Reduzi a altura da Navbar
         position: "absolute",
         bottom: 10,
-        width: "100%",
+        width: "96%",
         backgroundColor: "#fff",
         height: 70,
         flexDirection: "row",
@@ -92,9 +94,13 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         elevation: 5,
         borderRadius: 30,  
+        paddingHorizontal: 0,  // Reduzi o padding lateral
+        marginHorizontal: "2.2%",
     },
+    
     navButton: {
         padding: 10,
+
     },
     createButton: {
         width: 60,
