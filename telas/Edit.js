@@ -102,7 +102,7 @@ const Edit = ({ route, navigation }) => {
   };
 
   return (
-    <AppLayouts scrollable = {true}>
+    <AppLayouts hideNavbar={true} scrollable={true}>
       <Text style={styles.title}>Edite sua Receita</Text>
       <Text style={styles.subtitle}>Nome da Receita</Text>
       <Input
