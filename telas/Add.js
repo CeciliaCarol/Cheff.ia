@@ -83,7 +83,7 @@ const Add = ({ navigation }) => {
   };
 
   return (
-    <AppLayouts scrollable = {true}>
+    <AppLayouts hideNavbar={true} scrollable={true}>
       <Text style={styles.title}>Crie sua receita</Text>
       <Text style={styles.subtitle}>Nome de Receita</Text>
       <Input
