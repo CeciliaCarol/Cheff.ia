@@ -6,7 +6,8 @@ import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firesto
 import { TAGS } from '../constants';  
 import FormIngredientes from './FormIngredientes';
 import AppLayouts from '../componentes/AppLayouts';
-import Navbar from '../componentes/Navbar';
+
+
 
 const Home = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -21,7 +22,7 @@ const Home = ({ navigation }) => {
     setDropdownVisible(!dropdownVisible);
   };
 
-  const closeDropdown = () => {
+    const closeDropdown = () => {
     setDropdownVisible(false);
   };
 
@@ -110,12 +111,12 @@ const Home = ({ navigation }) => {
 
   const renderTag = (tag) => (
     <TouchableOpacity
-      key={tag}
-      style={[
-        styles.tag,
-        selectedTags.includes(tag) && styles.tagSelected
-      ]}
-      onPress={() => handleTagPress(tag)}
+    key={tag}
+    style={[
+      styles.tag,
+      selectedTags.includes(tag) && styles.tagSelected
+    ]}
+    onPress={() => handleTagPress(tag)}
     >
       <Text style={[
         styles.tagText,
@@ -182,17 +183,14 @@ const Home = ({ navigation }) => {
             </View>
           )}
 
+
           {/* Formulário de Ingredientes aqui */}
-          <FormIngredientes />
+          {/*<FormIngredientes */}
 
           <ScrollView horizontal style={styles.tagContainer}>
             {TAGS.map(tag => renderTag(tag))}
           </ScrollView>
-        </View>
-        <Button title="Gerar Receita" onPress={() => navigation.navigate('FormIngredientes')} />
-        {loading ? (
-          <Text style={styles.loading}>Carregando...</Text>
-        ) : filteredRecipes.length > 0 ? (
+        </View>        
           <FlatList
             data={filteredRecipes}
             keyExtractor={(item) => item.id}
@@ -201,14 +199,18 @@ const Home = ({ navigation }) => {
           />
         ) : (
           <Text style={styles.noRecipes}>Sem receitas disponíveis</Text>
-        )}
-
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
-            <Image source={require('../assets/imagens/criar.png')} style={styles.icon} />
-          </TouchableOpacity>
+        )
+         return (
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                {/* Conteúdo da tela */}
+            </ScrollView>
+            
         </View>
-        <Navbar/>
+    );
+    );
+        
+        
       </AppLayouts>
     </TouchableWithoutFeedback>
   );
@@ -228,17 +230,18 @@ const styles = StyleSheet.create({
 
   searchSection: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: 20,
+
   },
   pesquisa: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    height: 43,
-    width: 325,
-    flexDirection: 'row',
-    margin: 10,
+     backgroundColor: '#fff',
+  borderRadius: 10,
+  height: 43,
+  width: 280, 
+  flexDirection: 'row',
+  margin: 10,
   },
   searchInput: {
     flex: 1,
@@ -260,6 +263,7 @@ const styles = StyleSheet.create({
     width: 43,
     height: 43,
     borderRadius: 10,
+    marginLeft: 10, 
   },
   menuIcon: {
     width: 40,
@@ -288,17 +292,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   tag: {
-    backgroundColor: '#f37e8f',
+    backgroundColor: '#015927', 
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginRight: 10,
     borderRadius: 20,
   },
   tagSelected: {
-    backgroundColor: '#f4a1b2',
+    backgroundColor: '#218838', 
   },
   tagText: {
-    color: '#fff',
+    color: '#fff', 
   },
   tagSelectedText: {
     fontWeight: 'bold',
@@ -360,8 +364,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   searchicon: {
-    width: 20,
-    height: 20,
+    width: 24, // Aumentei a largura
+    height: 24, // Aumentei a altura
+    margin: 10,
   },
   loading: {
     textAlign: 'center',
@@ -369,6 +374,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
   },
+ 
 });
 
 export default Home;
