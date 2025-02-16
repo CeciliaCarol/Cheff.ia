@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import AppLayouts from '../componentes/AppLayouts';
-import Navbar from '../componentes/Navbar';
 import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -117,7 +116,7 @@ const Perfil = () => {
                 </TouchableOpacity>
              </View>
           </View>
-        <Navbar/>
+       
         </AppLayouts>
     );
 };
