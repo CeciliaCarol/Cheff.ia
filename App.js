@@ -34,7 +34,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome" screenOptions={{
-        headerTintColor: '#fff', 
+        headerShown: false, 
       }} >
         <Stack.Screen name="Welcome" component={Welcome} 
         options={{
@@ -43,8 +43,7 @@ export default function App() {
         }} />
         <Stack.Screen name="Login" component={Login} 
         options={{
-          headerTransparent: true,
-          headerTintColor: 'transparent',
+          headerShown: false,
         }}/>
         <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={Home} />
@@ -73,15 +72,13 @@ export default function App() {
         />
         <Stack.Screen name="Favoritos" component={Favoritos} 
         options={{
-          headerTransparent: true,
-          headerTintColor: '#000',
+            headerShown: false,
         }}
         />
         {/* Adicione a tela FormIngredientes no Stack Navigator */}
         <Stack.Screen name="FormIngredientes" component={FormIngredientes} 
           options={{
-            headerTransparent: true,
-            headerTintColor: '#000',
+            headerShown: false,
           }} 
         />
         <Stack.Screen name="Perfil" component={Perfil}
