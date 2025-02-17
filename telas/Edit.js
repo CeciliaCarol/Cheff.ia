@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 20,
     marginHorizontal: 120,
-    marginTop: 50,
+    marginTop: 20,
     fontFamily: 'Poppins-SemiBold',
   },
   buttonImg: {
@@ -205,13 +205,13 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   tagButton: {
-    backgroundColor: '#F37E8F',
+    backgroundColor: '#E43434',
     padding: 10,
     borderRadius: 10,
     margin: 5,
   },
   selectedTagButton: {
-    backgroundColor: '#A31F51',
+    backgroundColor: '#F17166',
   },
   tagText: {
     color: '#fff',
