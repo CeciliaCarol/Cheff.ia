@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     margin:20,
     fontFamily: 'PlayfairDisplay-Regular',
     color: '#333',
-    marginBottom: 100,
+    marginBottom: 30,
   },
   subtitle: {
     color: '#333',
@@ -179,13 +179,13 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   tagButton: {
-    backgroundColor: '#F37E8F',
+    backgroundColor: '#E43434',
     padding: 10,
     borderRadius: 10,
     margin: 5,
   },
   selectedTagButton: {
-    backgroundColor: '#A31F51',
+    backgroundColor: '#F17166',
   },
   tagText: {
     color: '#fff',
