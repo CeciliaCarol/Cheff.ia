@@ -6,6 +6,7 @@ import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firesto
 import { TAGS } from '../constants';  
 import FormIngredientes from './FormIngredientes';
 import AppLayouts from '../componentes/AppLayouts';
+import { Ionicons } from '@expo/vector-icons';
 
 
 
@@ -161,12 +162,12 @@ const Home = ({ navigation, route }) => {
               />
               <View style={styles.iconContainer}>
                 <TouchableOpacity>
-                  <Image source={require('../assets/imagens/Search.png')} style={styles.searchicon} />
+                  <Ionicons name='search' size={24} color="#F9D5CD"/>
                 </TouchableOpacity>
               </View>
             </View>
             <TouchableOpacity onPress={toggleDropdown} style={styles.menubutton}>
-              <Image source={require('../assets/imagens/Menu Vertical.png')} style={styles.menuIcon} />
+              <Ionicons name='ellipsis-vertical' size={30} color="#fff"/>
             </TouchableOpacity>
           </View>
           {dropdownVisible && (
@@ -187,10 +188,11 @@ const Home = ({ navigation, route }) => {
           {/* Formulário de Ingredientes aqui */}
           {/*<FormIngredientes */}
 
+          
+        </View>  
           <ScrollView horizontal style={styles.tagContainer}>
             {TAGS.map(tag => renderTag(tag))}
-          </ScrollView>
-        </View>        
+          </ScrollView>      
           <FlatList
             data={filteredRecipes}
             keyExtractor={(item) => item.id}
@@ -217,6 +219,11 @@ const Home = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
   favoritoButton: {
     borderRadius: 5,
     marginLeft: 5,
@@ -237,7 +244,7 @@ const styles = StyleSheet.create({
   },
   pesquisa: {
      backgroundColor: '#fff',
-  borderRadius: 10,
+  borderRadius: 30,
   height: 43,
   width: 280, 
   flexDirection: 'row',
@@ -250,12 +257,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   header: {
-    backgroundColor: '#f37e8f',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    backgroundColor: '#f17166',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     padding: 10,
-    paddingBottom: 20,
-    marginBottom: 35,
+    marginTop: 20,
+    marginBottom: 20,
+    width: "100%",
   },
   menubutton: {
     padding: 2,
@@ -264,11 +274,10 @@ const styles = StyleSheet.create({
     height: 43,
     borderRadius: 10,
     marginLeft: 10, 
+    justifyContent: "center",
+    alignItems: "center",
   },
-  menuIcon: {
-    width: 40,
-    height: 40,
-  },
+  
   dropdown: {
     position: 'absolute',
     top: 50,
@@ -296,7 +305,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginRight: 10,
-    borderRadius: 20,
+    borderRadius: 10,
+    width: 80,
+    height: 80,
   },
   tagSelected: {
     backgroundColor: '#218838', 
@@ -358,16 +369,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
   },
-  icon: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-  },
-  searchicon: {
-    width: 24, 
-    height: 24, 
-    margin: 10,
-  },
+  
   loading: {
     textAlign: 'center',
     marginTop: 50,

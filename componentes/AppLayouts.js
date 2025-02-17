@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet,extraPaddingTop, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import Navbar from "./Navbar"; // Importando sua Navbar
 
 const AppLayouts = ({ children, scrollable = false, hideNavbar = false, route }) => {
