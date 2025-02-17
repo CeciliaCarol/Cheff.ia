@@ -9,7 +9,7 @@ import AppLayouts from '../componentes/AppLayouts';
 
 
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -148,7 +148,7 @@ const Home = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
-      <AppLayouts scrollable = {true}>
+      <AppLayouts scrollable = {true} route={route}>
         <View style={styles.header}>
           <View style={styles.searchSection}>
             <View style={styles.pesquisa}>
@@ -364,8 +364,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   searchicon: {
-    width: 24, // Aumentei a largura
-    height: 24, // Aumentei a altura
+    width: 24, 
+    height: 24, 
     margin: 10,
   },
   loading: {
