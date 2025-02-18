@@ -25,6 +25,7 @@
     },
     "assetBundlePatterns": [
       "assets/fontes/*"
-    ]
+    ],
+    "newArchEnabled": true
   }
 }
