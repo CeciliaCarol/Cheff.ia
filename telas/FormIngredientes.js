@@ -7,7 +7,7 @@ import Buttons from '../componentes/Buttons';
 
 function FormIngredientes() {
   const [ingredientes, setIngredientes] = useState('');
-  const [receita, setReceita] = useState([]);
+  const [receita, setReceita] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -17,16 +17,17 @@ function FormIngredientes() {
     }
 
     setLoading(true);
+    setReceita(null); // Limpa a resposta anterior
     try {
       const response = await axios.post('http://192.168.0.101:5000/gerar-receita', {
         ingredientes: ingredientes.split(',').map((item) => item.trim()),
       });
 
       console.log("Resposta da API:", response.data); // Debug
-      setReceita(response.data.receitas || []);
+      setReceita(response.data); // Salva o retorno da API
     } catch (error) {
       console.error('Erro ao gerar receita:', error.response?.data || error.message);
-      setReceita([{ titulo: 'Erro', descricao: 'Não foi possível gerar receita.' }]);
+      setReceita({ erro: 'Não foi possível gerar receita.' });
     }
     setLoading(false);
   };
@@ -48,27 +49,16 @@ function FormIngredientes() {
           disabled={loading}
           title="Gerar Receita"
         />
-        {loading && <ActivityIndicator size="large" color="#f37e8f" />}
-        {receita?.length > 0 && (
-          <View style={styles.receitaContainer}>
-            <Text style={styles.receitaTitle}>Receitas Encontradas:</Text>
-            {receita.map((item, index) => (
-              <View key={index} style={styles.receitaItem}>
-                <Text style={styles.receitaNome}>{item.titulo}</Text>
-                <Text>{item.descricao}</Text>
-                <Text style={styles.subTitle}>Ingredientes:</Text>
-                {item.ingredientes?.map((ing, i) => (
-                  <Text key={i}>- {ing}</Text>
-                ))}
-                <Text style={styles.subTitle}>Modo de Preparo:</Text>
-                {item.instrucoes?.map((inst, i) => (
-                  <Text key={i}>{i + 1}. {inst}</Text>
-                ))}
-              </View>
-            ))}
+
+        {/* Exibição do retorno da API */}
+        {loading && <ActivityIndicator size="large" color="#000" />}
+        {receita && receita.receitas && (
+          <View style={styles.resultContainer}>
+            <Text style={styles.receitaTitulo}>{receita.receitas[0].titulo}</Text>
+            <Text>{receita.receitas[0].descricao}</Text>
           </View>
         )}
-      </ScrollView>
+      </ScrollView> 
     </AppLayouts>
   );
 }
@@ -84,29 +74,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
-  receitaContainer: {
+  button: {
+    marginTop: 10,
+  },
+  resultContainer: {
     marginTop: 20,
-    width: '100%',
-  },
-  receitaTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  receitaItem: {
-    marginBottom: 20,
     padding: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f0f0f0',
     borderRadius: 8,
   },
-  receitaNome: {
-    fontSize: 18,
+  receitaTitulo: {
+    fontSize: 20,
     fontWeight: 'bold',
-  },
-  subTitle: {
-    fontWeight: 'bold',
-    marginTop: 10,
+    marginBottom: 10,
   },
 });
 
