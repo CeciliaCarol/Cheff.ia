@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import AppLayouts from '../componentes/AppLayouts';
 import Input from '../componentes/Inputs';
 import Buttons from '../componentes/Buttons';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 function FormIngredientes() {
   const [ingredientes, setIngredientes] = useState('');
   const [receita, setReceita] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const handleSubmit = async () => {
     if (!ingredientes.trim()) {
@@ -19,7 +22,7 @@ function FormIngredientes() {
     setLoading(true);
     setReceita(null); // Limpa a resposta anterior
     try {
-      const response = await axios.post('http://192.168.0.101:5000/gerar-receita', {
+      const response = await axios.post('http://192.168.100.227:5000/gerar-receita', {
         ingredientes: ingredientes.split(',').map((item) => item.trim()),
       });
 
@@ -32,9 +35,17 @@ function FormIngredientes() {
     setLoading(false);
   };
 
+  const handlegoBack = () => {
+    navigation.goBack();
+ };
+
+
   return (
     <AppLayouts hideNavbar={true}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
+                 <Ionicons name="chevron-back" size={28} color="#fff" />
+              </TouchableOpacity>
         <Text style={styles.title}>Gerar Receita</Text>
         <Input
           style={styles.input}
@@ -64,15 +75,29 @@ function FormIngredientes() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 10,
+    margin: 10,
+    backgroundColor: "#F17166",
+    width: 35,
+    height: 35,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+},
+  title: {
+    fontSize: 32,
+    textAlign:'center',
+    margin:20,
+    fontFamily: 'PlayfairDisplay-Regular',
+    color: '#333',
+    marginBottom: 30,
+  },
   scrollContainer: {
     paddingVertical: 20,
     paddingHorizontal: 15,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
   },
   button: {
     marginTop: 10,

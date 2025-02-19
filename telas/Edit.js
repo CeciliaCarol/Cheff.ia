@@ -8,13 +8,15 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import AppLayouts from '../componentes/AppLayouts';
 import Input from '../componentes/Inputs';
 import Buttons from '../componentes/Buttons';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 const tagsList = ['Doce', 'Salgado', 'Vegano', 'Vegetariano', 'Sem Lactose'];
 
-const Edit = ({ route, navigation }) => {
+const Edit = ({ route}) => {
   const { recipeId } = route.params; // Recebe o ID da receita como parâmetro
   const [recipe, setRecipe] = useState({
     name: '',
@@ -25,6 +27,7 @@ const Edit = ({ route, navigation }) => {
   });
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -101,8 +104,16 @@ const Edit = ({ route, navigation }) => {
     );
   };
 
+  const handlegoBack = () => {
+    navigation.goBack();
+ };
+
+
   return (
-    <AppLayouts hideNavbar={true} scrollable={true}>
+    <AppLayouts hideNavbar={true}>
+      <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
+        <Ionicons name="chevron-back" size={28} color="#fff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Edite sua Receita</Text>
       <Text style={styles.subtitle}>Nome da Receita</Text>
       <Input
@@ -156,6 +167,18 @@ const Edit = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 10,
+    margin: 10,
+    backgroundColor: "#F17166",
+    width: 35,
+    height: 35,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+},
   title: {
     fontSize: 32,
     textAlign: 'center',

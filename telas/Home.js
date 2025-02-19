@@ -131,16 +131,17 @@ const Home = ({ navigation, route }) => {
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-        <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
+        <Text style={styles.autor}>Criado por: {item.createdBy || 'Anônimo'}</Text>
         <View style={styles.c_footer}>
           <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
             <Text style={styles.viewDetails}>Ver Mais</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
-            <Image
-              source={favorites.includes(item.id) ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
-              style={styles.favoriteIcon}
-            />
+            <Ionicons 
+            name={ favorites.includes(item.id) ? 'heart' : 'heart-outline' }
+            size={30}
+            color={ favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}/
+            >
           </TouchableOpacity>
         </View>
       </View>
@@ -149,7 +150,7 @@ const Home = ({ navigation, route }) => {
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
-      <AppLayouts scrollable = {true} route={route}>
+      <AppLayouts >
         <View style={styles.header}>
           <View style={styles.searchSection}>
             <View style={styles.pesquisa}>
@@ -162,7 +163,7 @@ const Home = ({ navigation, route }) => {
               />
               <View style={styles.iconContainer}>
                 <TouchableOpacity>
-                  <Ionicons name='search' size={24} color="#F9D5CD"/>
+                  <Ionicons name='search' size={24} color="#f37e8f"/>
                 </TouchableOpacity>
               </View>
             </View>
@@ -188,8 +189,9 @@ const Home = ({ navigation, route }) => {
           {/* Formulário de Ingredientes aqui */}
           {/*<FormIngredientes */}
 
-          
+          <Text style={styles.titulotext}> Olá, Cheff!</Text>
         </View>  
+        <Text style={styles.recipeTitle}>Categorias</Text>
           <ScrollView horizontal style={styles.tagContainer}>
             {TAGS.map(tag => renderTag(tag))}
           </ScrollView>      
@@ -204,7 +206,8 @@ const Home = ({ navigation, route }) => {
         )
          return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+          
+            <ScrollView Style={styles.scrollContainer}>
                 {/* Conteúdo da tela */}
             </ScrollView>
             
@@ -219,6 +222,16 @@ const Home = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  autor: {
+    fontSize: 16,
+    marginBottom: 10,
+    marginTop: 5,
+  },
+  titulotext: {
+    fontSize: 28,
+    color: '#fff',
+    fontFamily: 'PlayfairDisplay-Regular',
+  },
   iconContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -248,7 +261,7 @@ const styles = StyleSheet.create({
   height: 43,
   width: 280, 
   flexDirection: 'row',
-  margin: 10,
+  
   },
   searchInput: {
     flex: 1,
@@ -263,7 +276,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 10,
-    marginTop: 20,
+    marginTop: 0,
     marginBottom: 20,
     width: "100%",
   },
@@ -272,7 +285,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDD3D9',
     width: 43,
     height: 43,
-    borderRadius: 10,
+    borderRadius: 30,
     marginLeft: 10, 
     justifyContent: "center",
     alignItems: "center",
@@ -299,6 +312,7 @@ const styles = StyleSheet.create({
   tagContainer: {
     flexDirection: 'row',
     marginTop: 10,
+    paddingBottom: 80,
   },
   tag: {
     backgroundColor: '#015927', 
@@ -306,30 +320,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginRight: 10,
     borderRadius: 10,
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   tagSelected: {
     backgroundColor: '#218838', 
   },
   tagText: {
-    color: '#fff', 
+    color: '#fff',
+    fontWeight: "700", 
   },
   tagSelectedText: {
     fontWeight: 'bold',
   },
   recipeItem: {
-    flexDirection: 'row',
+    flexDirection: "column",
     padding: 10,
-    marginBottom: 15,
+    marginVertical: 10,
+    marginHorizontal: 2,
     backgroundColor: '#fff',
     borderRadius: 10,
-    elevation: 5,
+    elevation: 2,
   },
   recipeImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 5,
+    width: "100%",
+    height: 250,
+    borderRadius: 15,
     marginRight: 15,
   },
   content: {
@@ -337,7 +355,7 @@ const styles = StyleSheet.create({
   },
   recipeTitle: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
   },
   c_footer: {
     flexDirection: 'row',

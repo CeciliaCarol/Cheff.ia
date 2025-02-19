@@ -60,8 +60,6 @@ export default function App() {
         />
         <Stack.Screen name="Receitas" component={Receitas} 
         options={{
-          headerTransparent: true,
-          headerTintColor: '#000',
         }}
         />
         <Stack.Screen name="Detalhes" component={Detalhes}  

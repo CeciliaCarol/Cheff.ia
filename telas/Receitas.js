@@ -5,13 +5,17 @@ import { db } from '../firebaseConfig';
 import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, orderBy } from 'firebase/firestore';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
 import AppLayouts from '../componentes/AppLayouts';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 
-const Receitas = ({ navigation }) => {
+const Receitas = ( ) => {
   const [userRecipes, setUserRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [recipeToDelete, setRecipeToDelete] = useState(null);
+  const navigation = useNavigation();
+  
 
   useEffect(() => {
     const userId = auth.currentUser.uid;
@@ -86,7 +90,7 @@ const Receitas = ({ navigation }) => {
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-        <Text style={styles.infoText}>Ingredientes</Text>
+       {/* <Text style={styles.infoText}>Ingredientes</Text>
          {item.ingredients?.length > 0 && item.ingredients.map((ingredient, index) => (
           <Text key={index} style={styles.ingredientItem}> 
             {'\u2022'} {ingredient}
@@ -95,22 +99,33 @@ const Receitas = ({ navigation }) => {
         <Text style={styles.infoText}>Passo a passo</Text>
         <Text style={{marginLeft: 5}}>{item.instructions || 'Nenhuma'}</Text>
         <Text style={styles.infoText}>Tags </Text>
-        <Text style={{marginLeft: 5}}>{item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>
+        <Text style={{marginLeft: 5}}>{item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>*/}
       </View>
       <View style={styles.c_footer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Edit', { recipeId: item.id })}>
-          <Text style={styles.editButton}>Editar</Text>
+        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit', { recipeId: item.id })} >
+          <Ionicons name='pencil' size={24} color="#fff"/>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => confirmDelete(item.id)}>
-          <Text style={styles.deleteButton}>Excluir</Text>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(item.id)}>
+          <Ionicons name='trash-sharp' size={24} color="#fff"/>
         </TouchableOpacity>
       </View>
     </View>
   );
 
+  //Função para voltar pra tela anterior
+ const handlegoBack = () => {
+  navigation.goBack();
+};
+
   return (
-    <AppLayouts scrollable = {true}>
-      <Text style={styles.welcome}>Minhas Receitas</Text>
+    <AppLayouts>
+      <View style={styles.welcome}>
+        <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
+          <Ionicons name="chevron-back" size={28} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.recipeTitle} >Minhas Receitas</Text>
+        </View>
+      
       {loading ? (
         <Text>Carregando...</Text>
       ) : userRecipes.length > 0 ? (
@@ -152,14 +167,30 @@ const Receitas = ({ navigation }) => {
 const styles = StyleSheet.create({
  
   welcome: {
-    fontSize: 25,
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 10,
-    fontFamily:'PlayfairDisplay-Regular',
-    padding: 15,
+    padding: 30,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 10,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 10,
     textAlign: 'center',
-    
+    backgroundColor: "#F9D5CD",
   },
-
+  
+  backButton: {
+    position: "absolute",
+        top: 0,
+        left: 0,
+        margin: 10,
+        backgroundColor: "#fff",
+        width: 35,
+        height: 35,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
+  },
   content: {
    width: '100%',
   },
@@ -171,7 +202,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginVertical: 8,
     padding: 10,
-    margin: 15,
+    margin: 2,
     overflow: 'hidden',
   },
   ingredientItem: {
@@ -193,30 +224,22 @@ const styles = StyleSheet.create({
   },
 
   c_footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'row',    
     marginTop: 10,  
     },
   editButton: {
     backgroundColor:'#f58d94',
-    padding: 10,
-    borderRadius: 10,
-    color: '#fff',
     marginTop: 10,
+    padding:10,
+    borderRadius: 30,
     marginRight: 10,
-    fontFamily: 'Poppins-Regular',
-    fontSize: 18,
 
   },
   deleteButton: {
-    color: '#fff',
     marginTop: 10,
     padding: 10,
     backgroundColor: 'red',
-    borderRadius: 10,
-    fontSize: 18,
-    fontFamily: 'Poppins-Regular',
-    marginLeft: 10,
+    borderRadius: 30,
   },
   modalContainer: {
     flex: 1,

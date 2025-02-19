@@ -4,17 +4,17 @@ import Navbar from "./Navbar"; // Importando sua Navbar
 
 const AppLayouts = ({ children, scrollable = false, hideNavbar = false, route }) => {
      // Define paddingTop: 0 para a Home, e 50 para as outras telas
-     const paddingTop = route?.name === 'Home' ? 0 : 75;
+     
      
     return (
         <View style={styles.container}>
             {/* Conteúdo principal */}
             {scrollable ? (
-               <ScrollView contentContainerStyle={[styles.scrollContainer, { paddingTop }]}>
+               <ScrollView Style={[styles.scrollContainer]}>
                {children}
            </ScrollView>
             ) : (
-                <View style={[styles.content, { paddingTop }]}>
+                <View style={[styles.content]}>
                 {children}
             </View>
             )}
@@ -30,17 +30,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#FFFFFF",
     },
-    scrollContainer: {
-        flexGrow: 1,
-        padding: 20,
-        paddingTop:0, //esse
-        paddingBottom: 100, 
-    },
+    
     content: {
-        flex: 1,
+       paddingBottom: 150,
         padding: 20,
-        paddingBottom: 100, 
-        paddingTop: 50, 
+        
     },
 });
 

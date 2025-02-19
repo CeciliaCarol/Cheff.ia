@@ -71,7 +71,7 @@ export default function Register({ navigation }) {
       <Text style={styles.header}>Senha</Text>
       <Input
         placeholder="Senha"
-        secureTextEntry
+        secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
         placeholderTextColor="#808080" // Cor do texto do placeholder
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   header: {
     color: '#333',
     fontSize: 20,
-    padding: 1,
+    marginLeft: 5,
     fontFamily: 'Poppins-Regular',
     alignSelf: 'flex-start'
   },

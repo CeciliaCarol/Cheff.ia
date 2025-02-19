@@ -15,10 +15,12 @@ const Navbar = () => {
         <View style={styles.navbar}>
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
                 <Ionicons name="home-outline" size={24} color="black"/>
+                <Text>Início</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Favoritos')}>
                 <Ionicons name="heart-outline" size={24} color="black"/>
+                <Text>Favoritos</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -30,10 +32,12 @@ const Navbar = () => {
 
             <TouchableOpacity style={styles.navButton}>
                 <Ionicons name="bookmark-outline" size={24} color="black"/>
+                <Text>Salvos</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Perfil')}>
                 <Ionicons name="person-outline" size={24} color="black"/>
+                <Text>Perfil</Text>
             </TouchableOpacity>
         </View>
 
@@ -91,16 +95,16 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        paddingBottom: 10,
         elevation: 5,
         borderRadius: 30,  
-        paddingHorizontal: 0,  // Reduzi o padding lateral
-        marginHorizontal: "2.2%",
+        paddingRight: 8,
+        paddingLeft: 8,
+        marginHorizontal: 8,
     },
     
     navButton: {
-        padding: 10,
-
+        padding: 0,
+        alignItems: "center",
     },
     createButton: {
         width: 60,
@@ -110,10 +114,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: -20,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
         elevation: 5,
     },
 

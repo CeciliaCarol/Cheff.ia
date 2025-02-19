@@ -4,10 +4,13 @@ import { db } from '../firebaseConfig';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth } from '../firebaseConfig';
 import AppLayouts from '../componentes/AppLayouts';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 
-const Favoritos = ({ navigation }) => {
+const Favoritos = ( ) => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -48,9 +51,19 @@ const Favoritos = ({ navigation }) => {
     </View>
   );
 
+  //Função para voltar pra tela anterior
+ const handlegoBack = () => {
+  navigation.goBack();
+};
+
   return (
-    <AppLayouts scrollable = {true}>
-      <Text style={styles.header}>Receitas Favoritas</Text>
+    <AppLayouts >
+      <View style={styles.welcome}>
+        <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
+          <Ionicons name="chevron-back" size={28} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.recipeTitle} >Meus Favoritos</Text>
+        </View>
       {favoriteRecipes.length > 0 ? (
         <FlatList
           data={favoriteRecipes}
@@ -66,36 +79,43 @@ const Favoritos = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-    paddingTop: 25,
-    
+  backButton: {
+    position: "absolute",
+        top: 0,
+        left: 0,
+        margin: 10,
+        backgroundColor: "#fff",
+        width: 35,
+        height: 35,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
   },
-  header: {
-    fontSize: 25,
+  welcome: {
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 10,
-    fontFamily:'PlayfairDisplay-Regular',
-    padding: 15,
+    padding: 30,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 10,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 10,
     textAlign: 'center',
+    backgroundColor: "#F9D5CD",
   },
   recipeItem: {
     flexDirection: 'column',
-    marginVertical: 8,
-    margin: 15,
+    marginHorizontal: 2,
+    marginVertical: 15,
     padding: 10,
     backgroundColor:'#fff',
     borderRadius: 10,
-    elevation: 5,
+    elevation: 2,
   },
   recipeImage: {
     width: '100%',
-    height: 300,
-    marginRight: 10,
-    borderRadius: 8,
-  },
-  content: {
-    width: '100%',
+    height: 250,
+    borderRadius: 10,
   },
   recipeTitle: {
     fontFamily: 'PlayfairDisplay-Regular',

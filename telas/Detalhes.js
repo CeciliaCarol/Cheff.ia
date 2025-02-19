@@ -3,12 +3,16 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'rea
 import { db, auth } from '../firebaseConfig';
 import { doc, getDoc, collection, query, where, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore';
 import AppLayouts from '../componentes/AppLayouts';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Detalhes = ({ route }) => {
   const { recipeId } = route.params;
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -71,20 +75,35 @@ const Detalhes = ({ route }) => {
     return <Text>Receita não encontrada</Text>;
   }
 
+   //Função para voltar pra tela anterior
+ const handlegoBack = () => {
+  navigation.goBack();
+};
+
   return (
-    <AppLayouts hideNavbar={true} scrollable={true}>
+    <AppLayouts scrollable={true}>
+      <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
+          <Ionicons name="chevron-back" size={28} color="#fff" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.favoriteButton} onPress={handleFavoritePress}>
+          <Ionicons 
+            name={ isFavorite ? 'heart' : 'heart-outline' }
+            size={30}
+            color={ isFavorite ? '#f37e8f' : '#f37e8f'}
+          />
+      </TouchableOpacity>
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <View style={styles.header}>
+         <Text>Criado por: {recipe.createdBy}</Text>
+         <Ionicons name='share-social-outline' size={28}/>
+      </View>
+        <View style={styles.header}>
+          
           <Text style={styles.title}>{recipe.name}</Text>
-          <TouchableOpacity style={styles.favoriteButton} onPress={handleFavoritePress}>
-            <Image
-              source={isFavorite ? require('../assets/imagens/heart-filled.png') : require('../assets/imagens/heart-outline.png')}
-              style={styles.favoriteIcon}
-            />
-          </TouchableOpacity>
+          <Ionicons name='chatbubble-outline' size={28}/>
         </View>
-        <Text>Criado por: {recipe.createdBy}</Text>
+        
         <Text style={styles.conteudo}>Ingredientes</Text>
         {recipe.ingredients?.length > 0 && recipe.ingredients.map((ingredient, index) => (
           <Text key={index} style={styles.ingredientItem}>
@@ -99,9 +118,25 @@ const Detalhes = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    marginTop: 40,
+  backButton: {
+    position: "absolute",
+    top: 30,
+    left: 20,
+    zIndex: 100,
+    backgroundColor: "#f37e8f",
+    padding: 10,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems:"center",
+  },
+  favoriteButton: {
+    position: "absolute",
+    top: 240,
+    right: 10,
+    zIndex: 100,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 30,
   },
   content: {
     padding: 20,
@@ -111,6 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    marginTop: 10,
   },
   title: {
     fontSize: 32,
@@ -118,22 +154,18 @@ const styles = StyleSheet.create({
   },
   conteudo: {
     fontSize: 18,
-    marginTop: 15,
+    marginTop: 10,
     marginBottom: 15,
     fontFamily: 'Poppins-SemiBold',
   },
   recipeImage: {
     width: '100%',
     height: 300,
-    marginBottom: 5,
     borderRadius: 30,
   },
   ingredientItem: {
     fontSize: 16,
     lineHeight: 24,
-  },
-  favoriteButton: {
-    padding: 8,
   },
   favoriteIcon: {
     width: 24,

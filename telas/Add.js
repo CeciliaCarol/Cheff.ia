@@ -7,15 +7,18 @@ import { collection, addDoc } from 'firebase/firestore';
 import AppLayouts from '../componentes/AppLayouts';
 import Input from '../componentes/Inputs';
 import Buttons from '../componentes/Buttons';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 const tagsList = ['Doce', 'Salgado', 'Vegano', 'Vegetariano', 'Sem Lactose'];
 
-const Add = ({ navigation }) => {
+const Add = () => {
   const [recipeName, setRecipeName] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [imageUri, setImageUri] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
+  const navigation = useNavigation();
 
   const handlePickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -81,9 +84,17 @@ const Add = ({ navigation }) => {
         : [...prevTags, tag]
     );
   };
+  
+  const handlegoBack = () => {
+    navigation.goBack();
+ };
+
 
   return (
-    <AppLayouts hideNavbar={true} scrollable={true}>
+    <AppLayouts hideNavbar={true}>
+      <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
+         <Ionicons name="chevron-back" size={28} color="#fff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Crie sua receita</Text>
       <Text style={styles.subtitle}>Nome de Receita</Text>
       <Input
@@ -139,6 +150,18 @@ const Add = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 10,
+    margin: 10,
+    backgroundColor: "#F17166",
+    width: 35,
+    height: 35,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+},
   title: {
     fontSize: 32,
     textAlign:'center',
