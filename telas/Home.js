@@ -140,8 +140,9 @@ const Home = ({ navigation, route }) => {
             <Ionicons 
             name={ favorites.includes(item.id) ? 'heart' : 'heart-outline' }
             size={30}
-            color={ favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}/
-            >
+            color={ favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}
+            />
+            
           </TouchableOpacity>
         </View>
       </View>

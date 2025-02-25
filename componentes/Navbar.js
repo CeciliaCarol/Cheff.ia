@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Modal, Text, Pressable } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 
 const Navbar = () => {
@@ -30,9 +31,9 @@ const Navbar = () => {
                 <Ionicons name="add" size={28} color="white"/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navButton}>
-                <Ionicons name="bookmark-outline" size={24} color="black"/>
-                <Text>Salvos</Text>
+            <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Receitas')}>
+                <Ionicons name="book-outline" size={28} color="black"/>
+                <Text>Receitas</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Perfil')}>
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "center",
         elevation: 5,
-        borderRadius: 30,  
+        borderRadius: 50,  
         paddingRight: 8,
         paddingLeft: 8,
         marginHorizontal: 8,
