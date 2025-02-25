@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, Button } from 'react-native';
+import { 
+  View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, Button 
+} from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
-import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, setDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { TAGS } from '../constants';  
 import FormIngredientes from './FormIngredientes';
 import AppLayouts from '../componentes/AppLayouts';
 import { Ionicons } from '@expo/vector-icons';
-
-
 
 const Home = ({ navigation, route }) => {
   const [recipes, setRecipes] = useState([]);
@@ -23,7 +23,7 @@ const Home = ({ navigation, route }) => {
     setDropdownVisible(!dropdownVisible);
   };
 
-    const closeDropdown = () => {
+  const closeDropdown = () => {
     setDropdownVisible(false);
   };
 
@@ -112,12 +112,12 @@ const Home = ({ navigation, route }) => {
 
   const renderTag = (tag) => (
     <TouchableOpacity
-    key={tag}
-    style={[
-      styles.tag,
-      selectedTags.includes(tag) && styles.tagSelected
-    ]}
-    onPress={() => handleTagPress(tag)}
+      key={tag}
+      style={[
+        styles.tag,
+        selectedTags.includes(tag) && styles.tagSelected
+      ]}
+      onPress={() => handleTagPress(tag)}
     >
       <Text style={[
         styles.tagText,
@@ -138,11 +138,13 @@ const Home = ({ navigation, route }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
             <Ionicons 
-            name={ favorites.includes(item.id) ? 'heart' : 'heart-outline' }
-            size={30}
-            color={ favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}
+              name={favorites.includes(item.id) ? 'heart' : 'heart-outline'}
+              size={30}
+              color={favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}
             />
-            
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Comments', { recipeId: item.id })}>
+            <Ionicons name="chatbubble-ellipses-outline" size={30} color="#333" />
           </TouchableOpacity>
         </View>
       </View>
@@ -151,7 +153,7 @@ const Home = ({ navigation, route }) => {
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
-      <AppLayouts >
+      <AppLayouts>
         <View style={styles.header}>
           <View style={styles.searchSection}>
             <View style={styles.pesquisa}>
@@ -186,37 +188,18 @@ const Home = ({ navigation, route }) => {
             </View>
           )}
 
-
-          {/* Formulário de Ingredientes aqui */}
-          {/*<FormIngredientes */}
-
-          <Text style={styles.titulotext}> Olá, Cheff!</Text>
+          <Text style={styles.titulotext}>Olá, Cheff!</Text>
         </View>  
         <Text style={styles.recipeTitle}>Categorias</Text>
-          <ScrollView horizontal style={styles.tagContainer}>
-            {TAGS.map(tag => renderTag(tag))}
-          </ScrollView>      
-          <FlatList
-            data={filteredRecipes}
-            keyExtractor={(item) => item.id}
-            renderItem={renderRecipeItem}
-            ListFooterComponent={<View style={{ height: 100 }} />}
-          />
-        ) : (
-          <Text style={styles.noRecipes}>Sem receitas disponíveis</Text>
-        )
-         return (
-        <View style={styles.container}>
-          
-            <ScrollView Style={styles.scrollContainer}>
-                {/* Conteúdo da tela */}
-            </ScrollView>
-            
-        </View>
-    );
-    );
-        
-        
+        <ScrollView horizontal style={styles.tagContainer}>
+          {TAGS.map(tag => renderTag(tag))}
+        </ScrollView>      
+        <FlatList
+          data={filteredRecipes}
+          keyExtractor={(item) => item.id}
+          renderItem={renderRecipeItem}
+          ListFooterComponent={<View style={{ height: 100 }} />}
+        />
       </AppLayouts>
     </TouchableWithoutFeedback>
   );
@@ -242,27 +225,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginLeft: 5,
   },
-
-  favoriteIcon: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-  },
-
   searchSection: {
     flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  marginBottom: 20,
-
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   pesquisa: {
-     backgroundColor: '#fff',
-  borderRadius: 30,
-  height: 43,
-  width: 280, 
-  flexDirection: 'row',
-  
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    height: 43,
+    width: 280, 
+    flexDirection: 'row',
   },
   searchInput: {
     flex: 1,
@@ -291,7 +265,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  
   dropdown: {
     position: 'absolute',
     top: 50,
@@ -388,14 +361,12 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
   },
-  
   loading: {
     textAlign: 'center',
     marginTop: 50,
     fontSize: 18,
     color: '#888',
   },
- 
 });
 
 export default Home;

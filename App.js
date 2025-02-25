@@ -12,10 +12,9 @@ import Detalhes from './telas/Detalhes';
 import Favoritos from './telas/Favoritos'; 
 import FormIngredientes from "./telas/FormIngredientes";
 import Perfil from "./telas/Perfil";
+import Comments from "./telas/Comments"; // Importe a tela de Comentários
 import { ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
-import Navbar from "./componentes/Navbar";
-
 
 const Stack = createStackNavigator();
 
@@ -37,52 +36,60 @@ export default function App() {
         headerShown: false, 
       }} >
         <Stack.Screen name="Welcome" component={Welcome} 
-        options={{
-          headerTransparent: true,
-          headerTintColor: 'transparent',
-        }} />
+          options={{
+            headerTransparent: true,
+            headerTintColor: 'transparent',
+          }} 
+        />
         <Stack.Screen name="Login" component={Login} 
-        options={{
-          headerShown: false,
-        }}/>
-        <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Register" component={Register} 
+          options={{headerShown: false}}
+        />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Add" component={Add} 
-        options={{
-          headerTransparent: true,
-          headerTintColor: '#000',
-        }} />
-        <Stack.Screen name="Edit" component={Edit} 
-        options={{
-          headerTransparent: true,
-          headerTintColor: '#000',
-        }}
-        />
-        <Stack.Screen name="Receitas" component={Receitas} 
-        options={{
-        }}
-        />
-        <Stack.Screen name="Detalhes" component={Detalhes}  
-        options={{
+          options={{
             headerTransparent: true,
             headerTintColor: '#000',
-        }}
+          }} 
+        />
+        <Stack.Screen name="Edit" component={Edit} 
+          options={{
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
+        />
+        <Stack.Screen name="Receitas" component={Receitas} />
+        <Stack.Screen name="Detalhes" component={Detalhes}  
+          options={{
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
         />
         <Stack.Screen name="Favoritos" component={Favoritos} 
-        options={{
+          options={{
             headerShown: false,
-        }}
+          }}
         />
-        {/* Adicione a tela FormIngredientes no Stack Navigator */}
         <Stack.Screen name="FormIngredientes" component={FormIngredientes} 
           options={{
             headerShown: false,
           }} 
         />
         <Stack.Screen name="Perfil" component={Perfil}
-        options={{
-          headerShown: false,
-        }}
+          options={{
+            headerShown: false,
+          }}
+        />
+        {/* Adicione a tela de Comentários */}
+        <Stack.Screen name="Comments" component={Comments} 
+          options={{
+            title: 'Comentários', // Título da tela
+            headerShown: true, // Mostra o cabeçalho
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
