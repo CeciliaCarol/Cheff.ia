@@ -20,7 +20,7 @@ const AppLayouts = ({ children, scrollable = false, hideNavbar = false, route })
             )}
 
             {/* Exibe a Navbar apenas se `hideNavbar` for `false` */}
-            {!hideNavbar && <Navbar />}
+            {!hideNavbar && <Navbar/>}
         </View>
     );
 };

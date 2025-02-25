@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Modal, Text, Pressable } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 const Navbar = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const navigation = useNavigation();
+    const route = useRoute();
+
+    const getIcon = (screen, icon, filledIcon) => {
+        return route.name === screen ? filledIcon : icon;
+    };
 
     return (
         <>
@@ -15,12 +19,12 @@ const Navbar = () => {
 
         <View style={styles.navbar}>
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
-                <Ionicons name="home-outline" size={24} color="black"/>
+                <Ionicons name={getIcon('Home','home-outline', 'home')} size={24} color={route.name === 'Home' ? 'black' : 'black'}/>
                 <Text>Início</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Favoritos')}>
-                <Ionicons name="heart-outline" size={24} color="black"/>
+                <Ionicons name={getIcon('Favoritos','heart-outline', 'heart-sharp')} size={24} color={route.name === 'Favoritos' ? 'black' : 'black'}/>
                 <Text>Favoritos</Text>
             </TouchableOpacity>
 
@@ -32,12 +36,12 @@ const Navbar = () => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Receitas')}>
-                <Ionicons name="book-outline" size={28} color="black"/>
+                <Ionicons name={getIcon('Receitas','book-outline', 'book')} size={24} color={route.name === 'Receitas' ? 'black' : 'black'}/>
                 <Text>Receitas</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Perfil')}>
-                <Ionicons name="person-outline" size={24} color="black"/>
+                <Ionicons name={getIcon('Perfil','person-outline', 'person')} size={24} color={route.name === 'Perfil' ? 'black' : 'black'}/>
                 <Text>Perfil</Text>
             </TouchableOpacity>
         </View>
