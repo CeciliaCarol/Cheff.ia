@@ -95,7 +95,10 @@ const Detalhes = ({ route }) => {
       {recipe.imageUrl && <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <View style={styles.header}>
-         <Text>Criado por: {recipe.createdBy}</Text>
+          <View style={styles.perfil_content}>
+          <TouchableOpacity style={styles.imagem_perfil}></TouchableOpacity>
+         <Text style={styles.autor}> {recipe.createdBy}</Text>
+         </View>
          <Ionicons name='share-social-outline' size={28}/>
       </View>
         <View style={styles.header}>
@@ -118,6 +121,22 @@ const Detalhes = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  autor: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "700",
+  },
+  perfil_content: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+  },
+  imagem_perfil: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: "#333333",
+  },
   backButton: {
     position: "absolute",
     top: 30,

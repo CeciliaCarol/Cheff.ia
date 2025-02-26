@@ -90,16 +90,6 @@ const Receitas = ( ) => {
       {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-       {/* <Text style={styles.infoText}>Ingredientes</Text>
-         {item.ingredients?.length > 0 && item.ingredients.map((ingredient, index) => (
-          <Text key={index} style={styles.ingredientItem}> 
-            {'\u2022'} {ingredient}
-          </Text>
-        ))}
-        <Text style={styles.infoText}>Passo a passo</Text>
-        <Text style={{marginLeft: 5}}>{item.instructions || 'Nenhuma'}</Text>
-        <Text style={styles.infoText}>Tags </Text>
-        <Text style={{marginLeft: 5}}>{item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'Nenhuma'}</Text>*/}
       </View>
       <View style={styles.c_footer}>
         <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit', { recipeId: item.id })} >

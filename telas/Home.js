@@ -46,16 +46,16 @@ const Home = ({ navigation, route }) => {
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
-      const unsubscribe = onSnapshot(collection(db, 'favorites'), (querySnapshot) => {
-        const favoriteList = querySnapshot.docs
-          .filter(doc => doc.data().userId === user.uid)
-          .map(doc => doc.data().recipeId);
+      const q = query(collection(db, 'favorites'), where('userId', '==', user.uid)); // Filtra só os favoritos do usuário
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const favoriteList = querySnapshot.docs.map(doc => doc.data().recipeId);
         setFavorites(favoriteList);
       });
-
+  
       return () => unsubscribe();
     }
   }, []);
+  
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
@@ -127,15 +127,24 @@ const Home = ({ navigation, route }) => {
   );
 
   const renderRecipeItem = ({ item }) => (
-    <View style={styles.recipeItem}>
-      {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
+    <View style={styles.recipeItem} >
+      <View style={styles.perfil_content}>
+        <TouchableOpacity style={styles.imagem_perfil}></TouchableOpacity>
+        <Text style={styles.autor}> {item.createdBy || 'Anônimo'}</Text>
+      </View>
+       {item.imageUrl && (
+      <TouchableOpacity 
+        onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}
+        activeOpacity={0.8} // Deixa o clique mais suave
+      >
+        <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
+      </TouchableOpacity>
+    )}
+    
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-        <Text style={styles.autor}>Criado por: {item.createdBy || 'Anônimo'}</Text>
         <View style={styles.c_footer}>
-          <TouchableOpacity style={styles.b_button} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
-            <Text style={styles.viewDetails}>Ver Mais</Text>
-          </TouchableOpacity>
+          
           <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
             <Ionicons 
               name={favorites.includes(item.id) ? 'heart' : 'heart-outline'}
@@ -144,7 +153,7 @@ const Home = ({ navigation, route }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Comments', { recipeId: item.id })}>
-            <Ionicons name="chatbubble-ellipses-outline" size={30} color="#333" />
+            <Ionicons name="chatbubble-outline" size={30} color="#333" />
           </TouchableOpacity>
         </View>
       </View>
@@ -206,10 +215,23 @@ const Home = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+
+  perfil_content: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+  },
+  
+  imagem_perfil: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: "#333333",
+  },
   autor: {
     fontSize: 16,
     marginBottom: 10,
-    marginTop: 5,
+    fontWeight: "700",
   },
   titulotext: {
     fontSize: 28,
@@ -222,8 +244,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   favoritoButton: {
-    borderRadius: 5,
-    marginLeft: 5,
+    marginRight: 30,
   },
   searchSection: {
     flexDirection: 'row',
@@ -311,12 +332,9 @@ const styles = StyleSheet.create({
   },
   recipeItem: {
     flexDirection: "column",
-    padding: 10,
-    marginVertical: 10,
-    marginHorizontal: 2,
-    backgroundColor: '#fff',
+    padding: 0,
+    marginVertical: 20,
     borderRadius: 10,
-    elevation: 2,
   },
   recipeImage: {
     width: "100%",
@@ -325,7 +343,9 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   content: {
-    flex: 1,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    marginTop: 10,
   },
   recipeTitle: {
     fontWeight: 'bold',
@@ -333,7 +353,7 @@ const styles = StyleSheet.create({
   },
   c_footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: "flex-start",
     alignItems: 'center',
   },
   b_button: {
