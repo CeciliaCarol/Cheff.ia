@@ -9,7 +9,7 @@
 <ul>
   <li>Criação de receitas personalizadas.</li>
   <li>Sugestões de receitas geradas por IA com base nos ingredientes disponíveis.</li>
-  <li>Favoritar e salvar receitas.</li>
+  <li>Favoritar receitas.</li>
   <li>Filtros por tipo de prato, ingredientes e tags.</li>
   <li>Visualização e edição de receitas.</li>
   <li>Perfil do usuário</li>
