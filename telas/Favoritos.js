@@ -40,13 +40,24 @@ const Favoritos = ( ) => {
 
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem}>
-      {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
+      <View style={styles.perfil_content}>
+              <TouchableOpacity style={styles.imagem_perfil}></TouchableOpacity>
+              <Text style={styles.autor}> {item.createdBy || 'Anônimo'}</Text>
+            </View>
+      <TouchableOpacity 
+              onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}
+              activeOpacity={0.8} // Deixa o clique mais suave
+      >
+              { item.imageUrl && <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />}
+      </TouchableOpacity>
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-        <Text>Criado por: {item.createdBy || 'Anônimo'}</Text>
-        <TouchableOpacity style={styles.viewDetailsButton} onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
-          <Text style={styles.viewDetailsText}>Ver Detalhes</Text>
-        </TouchableOpacity>
+       {/* <TouchableOpacity 
+    style={styles.removeFavoriteButton} 
+    onPress={() => handleFavoritePress(item.id)} // Função que remove
+  >
+    <Ionicons name="heart-dislike-outline" size={30} color="#f37e8f" />
+  </TouchableOpacity>*/}
       </View>
     </View>
   );
@@ -69,6 +80,7 @@ const Favoritos = ( ) => {
           data={favoriteRecipes}
           keyExtractor={(item) => item.id}
           renderItem={renderRecipeItem}
+          numColumns={2}
         />
       ) : (
         <Text style={styles.noFavorites}>Você ainda não tem receitas favoritas.</Text>
@@ -79,6 +91,24 @@ const Favoritos = ( ) => {
 };
 
 const styles = StyleSheet.create({
+  perfil_content: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 5,
+  },
+  
+  imagem_perfil: {
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    backgroundColor: "#333333",
+  },
+  autor: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "700",
+  },
+
   backButton: {
     position: "absolute",
         top: 0,
@@ -104,23 +134,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9D5CD",
   },
   recipeItem: {
-    flexDirection: 'column',
-    marginHorizontal: 2,
-    marginVertical: 15,
-    padding: 10,
+    flex: 1,
+    marginHorizontal: 5,
+    marginVertical: 10,
+    padding: 8,
     backgroundColor:'#fff',
     borderRadius: 10,
     elevation: 2,
   },
   recipeImage: {
     width: '100%',
-    height: 250,
+    height: 200,
     borderRadius: 10,
   },
   recipeTitle: {
     fontFamily: 'PlayfairDisplay-Regular',
     fontSize: 24,
-    padding: 5,
   },
   viewDetailsButton: {
     marginTop: 10,
