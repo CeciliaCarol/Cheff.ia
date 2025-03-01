@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { db } from '../firebaseConfig';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, doc, deleteDoc } from 'firebase/firestore';
 import { auth } from '../firebaseConfig';
 import AppLayouts from '../componentes/AppLayouts';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const Favoritos = ( ) => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
-  const navigation = useNavigation();
+  const navigation = useNavigation();  
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -52,12 +52,12 @@ const Favoritos = ( ) => {
       </TouchableOpacity>
       <View style={styles.content}>
         <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-       {/* <TouchableOpacity 
-    style={styles.removeFavoriteButton} 
-    onPress={() => handleFavoritePress(item.id)} // Função que remove
-  >
-    <Ionicons name="heart-dislike-outline" size={30} color="#f37e8f" />
-  </TouchableOpacity>*/}
+        <TouchableOpacity 
+            style={styles.removeFavoriteButton} 
+            onPress={() => handleRemoveFavorite(item.id)} // Função que remove
+        >
+            <Ionicons name="trash-outline" size={30} color="#f37e8f" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -66,6 +66,22 @@ const Favoritos = ( ) => {
  const handlegoBack = () => {
   navigation.goBack();
 };
+
+const handleRemoveFavorite = async (recipeId) => {
+  const user = auth.currentUser;
+  if (user) {
+    // Referência ao Firestore, baseado no userId e recipeId
+    const favoriteRef = doc(collection(db, 'favorites'), `${user.uid}_${recipeId}`);
+
+    // Remover do Firestore
+    await deleteDoc(favoriteRef);
+
+    // Atualizar o estado local removendo a receita da lista de favoritos
+    setFavoriteRecipes((prevFavorites) => prevFavorites.filter(fav => fav.id !== recipeId));
+  }
+};
+
+
 
   return (
     <AppLayouts >
@@ -91,6 +107,14 @@ const Favoritos = ( ) => {
 };
 
 const styles = StyleSheet.create({
+
+  removeFavoriteButton: {
+    marginVertical: 5,
+  },
+  content: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   perfil_content: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
