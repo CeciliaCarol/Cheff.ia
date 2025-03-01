@@ -123,6 +123,8 @@ const Receitas = ( ) => {
           data={userRecipes}
           keyExtractor={(item) => item.id}
           renderItem={renderRecipeItem}
+          numColumns={2}
+          key={`userRecipes_${2}`}
         />
       ) : (
         <Text>Você não criou nenhuma receita ainda</Text>
@@ -182,40 +184,27 @@ const styles = StyleSheet.create({
         alignItems: "center",
   },
   content: {
-   width: '100%',
+   width: "100%",
   },
   recipeItem: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    flex: 1,
     backgroundColor: '#fff',
     borderRadius: 20,
     elevation: 5,
     marginVertical: 8,
     padding: 10,
-    margin: 2,
+    marginHorizontal: 5,
     overflow: 'hidden',
-  },
-  ingredientItem: {
-    fontSize: 16,
-    lineHeight: 20,
-    paddingLeft: 5,
   },
   recipeTitle: {
     fontFamily: 'PlayfairDisplay-Regular',
     fontSize: 24,
-    padding: 5,
-  },
-
-  infoText: {
-    fontSize: 16,
-    fontFamily: 'Poppins-Regular',
-    color: '#333',
-    padding: 5,
   },
 
   c_footer: {
-    flexDirection: 'row',    
-    marginTop: 10,  
+    flexDirection: 'row', 
+    justifyContent: "center",
+    marginTop: 8,  
     },
   editButton: {
     backgroundColor:'#f58d94',
