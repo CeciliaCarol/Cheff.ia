@@ -18,6 +18,8 @@ const Home = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  
+
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -26,6 +28,8 @@ const Home = ({ navigation, route }) => {
   const closeDropdown = () => {
     setDropdownVisible(false);
   };
+
+  
 
   // Código para lidar com favoritos
   const handleFavoritePress = async (recipeId) => {
@@ -129,7 +133,9 @@ const Home = ({ navigation, route }) => {
   const renderRecipeItem = ({ item }) => (
     <View style={styles.recipeItem} >
       <View style={styles.perfil_content}>
-        <TouchableOpacity style={styles.imagem_perfil}></TouchableOpacity>
+        <TouchableOpacity style={styles.imagem_perfil}>
+
+        </TouchableOpacity>
         <Text style={styles.autor}> {item.createdBy || 'Anônimo'}</Text>
       </View>
        {item.imageUrl && (
@@ -226,7 +232,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
-    backgroundColor: "#333333",
+    backgroundColor: "#333",
   },
   autor: {
     fontSize: 16,
