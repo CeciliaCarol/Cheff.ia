@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, FlatList, TextInput, Button, Pressable } from 'react-native';
 import { db, auth } from '../firebaseConfig';
-import { doc, getDoc, collection, query, where, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, onSnapshot, setDoc, deleteDoc, addDoc } from 'firebase/firestore';
 import AppLayouts from '../componentes/AppLayouts';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+
 
 const Detalhes = ({ route }) => {
   const { recipeId } = route.params;
@@ -12,7 +13,34 @@ const Detalhes = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const navigation = useNavigation();
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
 
+
+  useEffect(() => {
+      const q = query(
+        collection(db, 'comentarios'),
+        where('recipeId', '==', recipeId)
+      );
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const commentsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setComments(commentsList);
+      });
+      return () => unsubscribe();
+    }, [recipeId]);
+  
+    const handleAddComment = async () => {
+      const user = auth.currentUser;
+      if (user && newComment.trim()) {
+        await addDoc(collection(db, 'comentarios'), {
+          recipeId,
+          userId: user.uid,
+          text: newComment,
+          createdAt: new Date()
+        });
+        setNewComment('');
+      }
+    };
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -81,7 +109,7 @@ const Detalhes = ({ route }) => {
 };
 
   return (
-    <AppLayouts scrollable={true}>
+    <AppLayouts scrollable={true} >
       <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
       </TouchableOpacity>
@@ -116,11 +144,84 @@ const Detalhes = ({ route }) => {
         <Text style={styles.conteudo}>Instruções</Text>
         <Text>{recipe.instructions}</Text>
       </View>
+      <View style={styles.container}>
+            <View style={styles.inputcomentario}>
+            <View style={styles.inputcomentario}>
+            <View style={styles.imagem_perfil}></View>
+            <TextInput
+              style={styles.input}
+              value={newComment}
+              onChangeText={setNewComment}
+              placeholder="Digite seu comentário..."
+            />
+            </View>
+            <View style={styles.buttaoenviar}>
+             <Pressable style={styles.enviarbutton}  onPress={handleAddComment} >
+             <Ionicons name="send" size={24} color="#fff"/>
+             </Pressable>
+            </View>
+            </View>
+            <View style={styles.linha}></View>
+            <FlatList
+              data={comments}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                
+                <View style={styles.commentItem}>
+                  <View style={styles.perfil_coment}>
+                    <View style={styles.imagem_perfil}></View>
+                    <Text style={styles.autor}>Fulaninho123</Text>
+                  </View>
+                  <Text style={styles.commentText}>{item.text}</Text>
+                </View>
+              )}
+            />
+          </View>
       </AppLayouts>
   );
 };
 
 const styles = StyleSheet.create({
+
+  commentText: {
+    marginBottom: 20,
+  },
+  perfil_coment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+   enviarbutton: {
+    backgroundColor: "#015927",
+    padding: 10,
+    borderRadius: 30,
+    marginBottom: 10,
+    right: 0,
+   },
+
+  linha: {
+  height: 2,
+  backgroundColor: '#015927',
+  marginVertical: 10,
+  },
+
+/*Estilo dos comentarios */
+inputcomentario: {
+flexDirection: 'row',
+justifyContent: "space-between",
+
+},
+container: {
+margin: 15,
+borderRadius: 20,
+borderWidth: 2,
+borderColor: "#015927",
+paddingRight: 20,
+paddingLeft: 20,
+paddingBottom: 50,
+paddingTop: 20,
+elevation: 3,
+backgroundColor: "#fff",
+},
   autor: {
     fontSize: 16,
     marginBottom: 10,
@@ -135,6 +236,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
+    marginRight: 10,
+    marginBottom: 10,
     backgroundColor: "#333333",
   },
   backButton: {

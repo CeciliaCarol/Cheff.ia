@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import Navbar from "./Navbar"; // Importando sua Navbar
 
-const AppLayouts = ({ children, scrollable = false, hideNavbar = false, route }) => {
+const AppLayouts = ({ children, scrollable = false, hideNavbar = false }) => {
      // Define paddingTop: 0 para a Home, e 50 para as outras telas
      
      
@@ -10,7 +10,8 @@ const AppLayouts = ({ children, scrollable = false, hideNavbar = false, route })
         <View style={styles.container}>
             {/* Conteúdo principal */}
             {scrollable ? (
-               <ScrollView Style={[styles.scrollContainer]}>
+               <ScrollView style={styles.scrollContainer} 
+               >
                {children}
            </ScrollView>
             ) : (
@@ -30,9 +31,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#FFFFFF",
     },
+    scrollContainer: {
+    flexGrow: 1,
+    },
     
     content: {
-       paddingBottom: 150,
+     flex: 1,
+       paddingBottom: 80,
         padding: 20,
         
     },

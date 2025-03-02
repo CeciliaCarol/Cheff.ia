@@ -158,7 +158,7 @@ const Home = ({ navigation, route }) => {
               color={favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Comments', { recipeId: item.id })}>
+          <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
             <Ionicons name="chatbubble-outline" size={30} color="#333" />
           </TouchableOpacity>
         </View>
