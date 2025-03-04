@@ -80,6 +80,7 @@ export default function App() {
           }} 
         />
         <Stack.Screen name="Perfil" component={Perfil}
+          initialParams={{ userId: null }} // Permite acessar perfis diferentes
           options={{
             headerShown: false,
           }}

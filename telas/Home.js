@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, Button 
+import {
+  View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, TextInput, TouchableWithoutFeedback, Button
 } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { db } from '../firebaseConfig';
 import { collection, onSnapshot, doc, setDoc, deleteDoc, query, where } from 'firebase/firestore';
-import { TAGS } from '../constants';  
+import { TAGS } from '../constants';
 import FormIngredientes from './FormIngredientes';
 import AppLayouts from '../componentes/AppLayouts';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,7 +18,7 @@ const Home = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [favorites, setFavorites] = useState([]);
-  
+
 
 
   const toggleDropdown = () => {
@@ -29,7 +29,7 @@ const Home = ({ navigation, route }) => {
     setDropdownVisible(false);
   };
 
-  
+
 
   // Código para lidar com favoritos
   const handleFavoritePress = async (recipeId) => {
@@ -55,15 +55,19 @@ const Home = ({ navigation, route }) => {
         const favoriteList = querySnapshot.docs.map(doc => doc.data().recipeId);
         setFavorites(favoriteList);
       });
-  
+
       return () => unsubscribe();
     }
   }, []);
-  
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'receitas'), (querySnapshot) => {
-      const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const recipesList = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        console.log('Receita carregada:', data); // Depuração para verificar userId
+        return { id: doc.id, ...data };
+      });
+
       setRecipes(recipesList);
       setLoading(false);
     }, (error) => {
@@ -109,7 +113,6 @@ const Home = ({ navigation, route }) => {
       prevTags.includes(tag) ? prevTags.filter(t => t !== tag) : [...prevTags, tag]
     );
   };
-
   const handleLogout = () => {
     auth.signOut().then(() => navigation.navigate('Login'));
   };
@@ -130,41 +133,63 @@ const Home = ({ navigation, route }) => {
     </TouchableOpacity>
   );
 
-  const renderRecipeItem = ({ item }) => (
-    <View style={styles.recipeItem} >
-      <View style={styles.perfil_content}>
-        <TouchableOpacity style={styles.imagem_perfil}>
+  const renderRecipeItem = ({ item }) => {
 
-        </TouchableOpacity>
-        <Text style={styles.autor}> {item.createdBy || 'Anônimo'}</Text>
-      </View>
-       {item.imageUrl && (
-      <TouchableOpacity 
-        onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}
-        activeOpacity={0.8} // Deixa o clique mais suave
-      >
-        <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
-      </TouchableOpacity>
-    )}
-    
-      <View style={styles.content}>
-        <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
-        <View style={styles.c_footer}>
-          
-          <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
-            <Ionicons 
-              name={favorites.includes(item.id) ? 'heart' : 'heart-outline'}
-              size={30}
-              color={favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}
-            />
+    return (
+      <View style={styles.recipeItem}>
+        <View style={styles.perfil_content}>
+          <TouchableOpacity
+            style={styles.imagem_perfil}
+            onPress={() => {
+              if (item.userId) {
+                console.log('ID do Criador:', item.userId);
+                navigation.navigate('Perfil', { userId: item.userId });
+              } else {
+                console.warn('Nenhum ID de criador encontrado.');
+              }
+            }}
+          >
+            {item.profileImageUrl ? (
+              <Image source={{ uri: item.profileImageUrl }} style={styles.imagem_perfil} />
+            ) : (
+              <Ionicons name="person-circle-outline" size={40} color="#fff" />
+            )}
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
-            <Ionicons name="chatbubble-outline" size={30} color="#333" />
+
+          <Text style={styles.autor}>{item.createdBy || 'Anônimo'}</Text>
+        </View>
+
+        {item.imageUrl && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}
+            activeOpacity={0.8}
+          >
+            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
           </TouchableOpacity>
+        )}
+
+        <View style={styles.content}>
+          <Text style={styles.recipeTitle}>{item.name || 'Sem nome'}</Text>
+          <View style={styles.c_footer}>
+            <TouchableOpacity style={styles.favoritoButton} onPress={() => handleFavoritePress(item.id)}>
+              <Ionicons
+                name={favorites.includes(item.id) ? 'heart' : 'heart-outline'}
+                size={30}
+                color={favorites.includes(item.id) ? '#f37e8f' : '#f37e8f'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Detalhes', { recipeId: item.id })}>
+              <Ionicons name="chatbubble-outline" size={30} color="#333" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
+
+
+
+
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
@@ -181,12 +206,12 @@ const Home = ({ navigation, route }) => {
               />
               <View style={styles.iconContainer}>
                 <TouchableOpacity>
-                  <Ionicons name='search' size={24} color="#f37e8f"/>
+                  <Ionicons name='search' size={24} color="#f37e8f" />
                 </TouchableOpacity>
               </View>
             </View>
             <TouchableOpacity onPress={toggleDropdown} style={styles.menubutton}>
-              <Ionicons name='ellipsis-vertical' size={30} color="#fff"/>
+              <Ionicons name='ellipsis-vertical' size={30} color="#fff" />
             </TouchableOpacity>
           </View>
           {dropdownVisible && (
@@ -204,11 +229,11 @@ const Home = ({ navigation, route }) => {
           )}
 
           <Text style={styles.titulotext}>Olá, Cheff!</Text>
-        </View>  
+        </View>
         <Text style={styles.recipeTitle}>Categorias</Text>
         <ScrollView horizontal style={styles.tagContainer}>
           {TAGS.map(tag => renderTag(tag))}
-        </ScrollView>      
+        </ScrollView>
         <FlatList
           data={filteredRecipes}
           keyExtractor={(item) => item.id}
@@ -227,7 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginBottom: 10,
   },
-  
+
   imagem_perfil: {
     width: 40,
     height: 40,
@@ -262,7 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 30,
     height: 43,
-    width: 280, 
+    width: 280,
     flexDirection: 'row',
   },
   searchInput: {
@@ -288,7 +313,7 @@ const styles = StyleSheet.create({
     width: 43,
     height: 43,
     borderRadius: 30,
-    marginLeft: 10, 
+    marginLeft: 10,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -316,7 +341,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   tag: {
-    backgroundColor: '#015927', 
+    backgroundColor: '#015927',
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginRight: 10,
@@ -327,11 +352,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tagSelected: {
-    backgroundColor: '#218838', 
+    backgroundColor: '#218838',
   },
   tagText: {
     color: '#fff',
-    fontWeight: "700", 
+    fontWeight: "700",
   },
   tagSelectedText: {
     fontWeight: 'bold',

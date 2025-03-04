@@ -1,214 +1,146 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import AppLayouts from '../componentes/AppLayouts';
-import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc, deleteDoc } from 'firebase/firestore';
 
 const Perfil = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const [userId, setUserId] = useState(route.params?.userId || null);
   const [user, setUser] = useState(null);
+  const [numReceitas, setNumReceitas] = useState(0);
+  const [numSeguidores, setNumSeguidores] = useState(0);
+  const [numSeguindo, setNumSeguindo] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const auth = getAuth();
+  const db = getFirestore();
+  const currentUser = auth.currentUser;
 
   useEffect(() => {
-    const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setUser(user);
-        } else {
+      if (user && !userId) {
+        setUserId(user.uid);
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUser = async () => {
+        if (!userId) return;
+        setLoading(true);
+        try {
+          const userRef = doc(db, 'users', userId);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            setUser(userSnap.data());
+          } else {
             setUser(null);
+          }
+        } catch (error) {
+          console.error('Erro ao buscar usuário:', error);
+        } finally {
+          setLoading(false);
         }
-    });
+      };
+      fetchUser();
+    }, [userId])
+  );
 
-    return () => unsubscribe();
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        if (!userId) return;
+        try {
+          const receitasQuery = query(collection(db, 'receitas'), where('userId', '==', userId));
+          const receitasSnapshot = await getDocs(receitasQuery);
+          setNumReceitas(receitasSnapshot.size);
 
- }, []);
+          const seguidoresQuery = query(collection(db, 'seguir'), where('seguidoId', '==', userId));
+          const seguidoresSnapshot = await getDocs(seguidoresQuery);
+          setNumSeguidores(seguidoresSnapshot.size);
 
- //Função para voltar pra tela anterior
- const handlegoBack = () => {
-    navigation.goBack();
- };
+          const seguindoQuery = query(collection(db, 'seguir'), where('seguidorId', '==', userId));
+          const seguindoSnapshot = await getDocs(seguindoQuery);
+          setNumSeguindo(seguindoSnapshot.size);
+        } catch (error) {
+          console.error('Erro ao buscar dados adicionais:', error);
+        }
+      };
+      fetchData();
+    }, [userId, isFollowing])
+  );
 
- //função para selecionar a imagem
- const pickImage = async () => {
-    const permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-        Alert.alert('Permissão necesaária', 'Você precisa permitir o acesso à galeria.');
-        return;
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (!currentUser || !userId || currentUser.uid === userId) return;
+      const checkFollowing = async () => {
+        const followQuery = query(collection(db, 'seguir'), where('seguidorId', '==', currentUser.uid), where('seguidoId', '==', userId));
+        const followSnapshot = await getDocs(followQuery);
+        setIsFollowing(!followSnapshot.empty);
+      };
+      checkFollowing();
+    }, [userId])
+  );
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-    });
-    if (!result.cancelled) {
-        uploadImage(result.assets[0].uri);
-    }
- };
-
- //Função para subir a imagem para o firebase Storege
- const uploadImage = async (imageUri) => {
+  const handleFollow = async () => {
+    if (!currentUser) return;
     try {
-        const storage = getStorage();
-        const auth = getAuth();
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-
-        const storageRef = ref(storage, `profilePictures/${auth.currentUser.uid}`);
-        await uploadBytes(storageRef, blob);
-
-        const downloadURL = await getDownloadURL(storageRef);
-
-        await updateProfile(auth.currentUser, { photoURL: downloadURL });
-
-        setUser({ ...auth.currentUser, photoURL: downloadURL });
-
-        Alert.alert('Sucesso', 'Foto de perfil atualizado');
+      const followQuery = query(collection(db, 'seguir'), where('seguidorId', '==', currentUser.uid), where('seguidoId', '==', userId));
+      const followSnapshot = await getDocs(followQuery);
+      if (followSnapshot.empty) {
+        await addDoc(collection(db, 'seguir'), { seguidorId: currentUser.uid, seguidoId: userId });
+        setIsFollowing(true);
+        setNumSeguidores((prev) => prev + 1);
+      } else {
+        followSnapshot.forEach(async (doc) => await deleteDoc(doc.ref));
+        setIsFollowing(false);
+        setNumSeguidores((prev) => prev - 1);
+      }
     } catch (error) {
-        console.error( 'Erro ao fazer upload da imagem:', error);
-        Alert.alert('Erro', 'Não foi possivel atualizar a foto.');
+      console.error('Erro ao seguir/desseguir:', error);
     }
- };
+  };
 
-    return (
-        <AppLayouts>
-          <View style={styles.perfilBox}>
-            <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
-                <Ionicons name="chevron-back" size={28} color="#000" />
-            </TouchableOpacity>
-                <Image 
-                source={{ uri: user?.photoURL || null, }} 
-                style={[styles.perfilImage, !user?.photoURL && styles.defaultImage]} 
-                />
-            <TouchableOpacity onPress={pickImage} style={styles.editIcon}>
-                <Ionicons name="pencil" size={20} color="black"/>
-            </TouchableOpacity>
-            <Text style={styles.nome}>{user?.displayName || 'Nome do Usuário'}</Text>
-          </View>
-          <View style={styles.conteudo}>
-            <View style={styles.box}>
-                <Text style={styles.number}>26</Text>
-                <Text style={styles.legenda}>Receitas</Text>
-            </View>
-            <View style={styles.box}>
-                <Text style={styles.number}>12</Text>
-                <Text style={styles.legenda}>Seguidores</Text>
-            </View>
-            <View style={styles.box}>
-                <Text style={styles.number}>28</Text>
-                <Text style={styles.legenda}>Likes</Text>
-            </View>
-          </View>
-          <View style={styles.optioncontent}>
-             <View style={styles.content}>
-                <Text style={styles.legenda}>Minhas Receitas</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Receitas')}>
-                <Ionicons name="chevron-forward" size={30} color="black"/>
-                </TouchableOpacity>
-             </View>
-             <View style={styles.content}>
-                <Text style={styles.legenda}>Sair</Text>
-                <TouchableOpacity>
-                <Ionicons name="exit-outline" size={30} color="red"/>
-                </TouchableOpacity>
-             </View>
-          </View>
-       
-        </AppLayouts>
-    );
+  return (
+    <AppLayouts>
+      <View style={styles.perfilBox}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={28} color="#000" />
+        </TouchableOpacity>
+        <Image source={user?.photoURL ? { uri: user.photoURL } : require('../assets/default-profile.png')} style={styles.perfilImage} />
+        {loading ? <ActivityIndicator size="large" color="#000" /> : <Text style={styles.nome}>{user?.name || 'Usuário não encontrado'}</Text>}
+        {currentUser && currentUser.uid !== userId && (
+          <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
+            <Text style={styles.followButtonText}>{isFollowing ? 'Deixar de Seguir' : 'Seguir'}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View style={styles.conteudo}>
+        <View style={styles.box}><Text style={styles.number}>{numReceitas}</Text><Text style={styles.legenda}>Receitas</Text></View>
+        <View style={styles.box}><Text style={styles.number}>{numSeguidores}</Text><Text style={styles.legenda}>Seguidores</Text></View>
+        <View style={styles.box}><Text style={styles.number}>{numSeguindo}</Text><Text style={styles.legenda}>Seguindo</Text></View>
+      </View>
+    </AppLayouts>
+  );
 };
 
 const styles = StyleSheet.create({
-    perfilBox: {
-       alignItems: "center",
-       backgroundColor: "#F9D5CD",
-       padding: 15,
-       borderTopLeftRadius: 30,
-       borderTopRightRadius: 30,
-       borderBottomRightRadius: 10,
-       borderBottomLeftRadius: 10,
-       width: "100%",
-       justifyContent: "flex-start",
-    },
-    backButton: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        margin: 10,
-        backgroundColor: "#fff",
-        width: 35,
-        height: 35,
-        borderRadius: 30,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    perfilImage: {
-       width: 180,
-       height: 180,
-       borderRadius: 100,
-       margin: 20,
-    },
-    defaultImage: {
-        backgroundColor: "#ccc",
-    },
-    editIcon: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        backgroundColor: "#fff",
-        width: 35,
-        height: 35,
-        borderRadius: 30,
-        alignItems: "center",
-        justifyContent: "center",
-        margin: 10,
-    },
-    nome: {
-       fontSize: 24,
-       fontWeight: "700",
-    },
-    conteudo: {
-        flexDirection: "row",
-        justifyContent: "center",
-        width: "100%",
-        padding: 10,
-    },
-    box: {
-        width: 100,
-        height: 100,
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 10,
-        backgroundColor: "#fff",
-        elevation: 3,
-        margin: 15,
-    },
-    number: {
-        fontSize: 30,
-        fontWeight: "700",
-        color: "#015927",
-    },
-    legenda: {
-        fontSize: 16,
-        fontWeight: "700",
-    },
-    content: {
-         flexDirection: "row",
-         justifyContent: "space-between",
-         alignItems: "center",
-         backgroundColor: "#F9D5CD",
-         width: "100%",
-         padding: 20,
-         borderRadius: 20,
-         marginBottom: 20,
-    },
-    optioncontent: {
-         flexDirection: "column",
-
-    },
+  perfilBox: { alignItems: 'center', backgroundColor: '#F9D5CD', padding: 15, borderRadius: 20 },
+  backButton: { position: 'absolute', top: 10, left: 10, backgroundColor: '#fff', width: 35, height: 35, borderRadius: 30, justifyContent: 'center', alignItems: 'center' },
+  perfilImage: { width: 180, height: 180, borderRadius: 100, margin: 20 },
+  nome: { fontSize: 24, fontWeight: '700' },
+  followButton: { marginTop: 10, backgroundColor: '#015927', padding: 10, borderRadius: 10 },
+  followButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  conteudo: { flexDirection: 'row', justifyContent: 'center', width: '100%', padding: 10 },
+  box: { width: 100, height: 100, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#fff', elevation: 3, margin: 15 },
+  number: { fontSize: 30, fontWeight: '700', color: '#015927' },
+  legenda: { fontSize: 16, fontWeight: '700' },
 });
 
 export default Perfil;
