@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import AppLayouts from '../componentes/AppLayouts';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc, deleteDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
 
 const Perfil = () => {
   const navigation = useNavigation();
@@ -29,64 +31,64 @@ const Perfil = () => {
     return unsubscribe;
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchUser = async () => {
-        if (!userId) return;
-        setLoading(true);
-        try {
-          const userRef = doc(db, 'users', userId);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            setUser(userSnap.data());
-          } else {
-            setUser(null);
-          }
-        } catch (error) {
-          console.error('Erro ao buscar usuário:', error);
-        } finally {
-          setLoading(false);
+  useEffect(() => {
+    if (!route.params?.userId && currentUser) {
+      setUserId(currentUser.uid);
+    }
+  }, [route.params?.userId, currentUser]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!userId) return;
+      setLoading(true);
+      try {
+        const userRef = doc(db, 'users', userId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setUser(userSnap.data());
+        } else {
+          setUser(null);
         }
-      };
-      fetchUser();
-    }, [userId])
-  );
+      } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, [userId]);
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        if (!userId) return;
-        try {
-          const receitasQuery = query(collection(db, 'receitas'), where('userId', '==', userId));
-          const receitasSnapshot = await getDocs(receitasQuery);
-          setNumReceitas(receitasSnapshot.size);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!userId) return;
+      try {
+        const receitasQuery = query(collection(db, 'receitas'), where('userId', '==', userId));
+        const receitasSnapshot = await getDocs(receitasQuery);
+        setNumReceitas(receitasSnapshot.size);
 
-          const seguidoresQuery = query(collection(db, 'seguir'), where('seguidoId', '==', userId));
-          const seguidoresSnapshot = await getDocs(seguidoresQuery);
-          setNumSeguidores(seguidoresSnapshot.size);
+        const seguidoresQuery = query(collection(db, 'seguir'), where('seguidoId', '==', userId));
+        const seguidoresSnapshot = await getDocs(seguidoresQuery);
+        setNumSeguidores(seguidoresSnapshot.size);
 
-          const seguindoQuery = query(collection(db, 'seguir'), where('seguidorId', '==', userId));
-          const seguindoSnapshot = await getDocs(seguindoQuery);
-          setNumSeguindo(seguindoSnapshot.size);
-        } catch (error) {
-          console.error('Erro ao buscar dados adicionais:', error);
-        }
-      };
-      fetchData();
-    }, [userId, isFollowing])
-  );
+        const seguindoQuery = query(collection(db, 'seguir'), where('seguidorId', '==', userId));
+        const seguindoSnapshot = await getDocs(seguindoQuery);
+        setNumSeguindo(seguindoSnapshot.size);
+      } catch (error) {
+        console.error('Erro ao buscar dados adicionais:', error);
+      }
+    };
+    fetchData();
+  }, [userId, isFollowing]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!currentUser || !userId || currentUser.uid === userId) return;
-      const checkFollowing = async () => {
-        const followQuery = query(collection(db, 'seguir'), where('seguidorId', '==', currentUser.uid), where('seguidoId', '==', userId));
-        const followSnapshot = await getDocs(followQuery);
-        setIsFollowing(!followSnapshot.empty);
-      };
-      checkFollowing();
-    }, [userId])
-  );
+  useEffect(() => {
+    if (!currentUser || !userId || currentUser.uid === userId) return;
+    const checkFollowing = async () => {
+      const followQuery = query(collection(db, 'seguir'), where('seguidorId', '==', currentUser.uid), where('seguidoId', '==', userId));
+      const followSnapshot = await getDocs(followQuery);
+      setIsFollowing(!followSnapshot.empty);
+    };
+    checkFollowing();
+  }, [userId]);
 
   const handleFollow = async () => {
     if (!currentUser) return;
@@ -96,11 +98,9 @@ const Perfil = () => {
       if (followSnapshot.empty) {
         await addDoc(collection(db, 'seguir'), { seguidorId: currentUser.uid, seguidoId: userId });
         setIsFollowing(true);
-        setNumSeguidores((prev) => prev + 1);
       } else {
         followSnapshot.forEach(async (doc) => await deleteDoc(doc.ref));
         setIsFollowing(false);
-        setNumSeguidores((prev) => prev - 1);
       }
     } catch (error) {
       console.error('Erro ao seguir/desseguir:', error);
