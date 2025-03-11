@@ -8,22 +8,21 @@
 
 <ul>
   <li>Criação de receitas personalizadas.</li>
-  <li>Sugestões de receitas geradas por IA com base nos ingredientes disponíveis.</li>
+  <li>Sugestões de receitas geradas por IA.</li>
   <li>Favoritar receitas.</li>
-  <li>Filtros por tipo de prato, ingredientes e tags.</li>
+  <li>Filtros por nome da receita e tags.</li>
   <li>Visualização e edição de receitas.</li>
-  <li>Perfil do usuário</li>
-  <li>Comentários e avaliações</li>
-  <li>Compartilhar receitas</li>
+  <li>Perfil do usuário.</li>
+  <li>Comentários.</li>
 </ul>
 
 ## 🚀 Tecnologias Utilizadas
 
 <ul>
-  <li><strong>Frontend:</strong></li>
-  <li><strong>Backend:</strong> </li>
-  <li><strong>Banco de Dados:</strong> </li>
-  <li><strong>IA:</strong> </li>
+  <li><strong>Frontend:</strong> React Native, Expo, Figma</li>
+  <li><strong>Backend:</strong> Express.js, Axios, Firebase</li>
+  <li><strong>Infraestrutura:</strong> CORS, Replicate</li>
+  
 </ul>
 
 ## 👥 Equipe
