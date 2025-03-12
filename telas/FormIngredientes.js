@@ -27,7 +27,19 @@ function FormIngredientes() {
       });
 
       console.log("Resposta da API:", response.data); // Debug
-      setReceita(response.data); // Salva o retorno da API
+
+      // Corrige a junção das partes do texto
+      if (response.data.receitas && response.data.receitas[0]) {
+        const receitaCorrigida = {
+          ...response.data.receitas[0],
+          descricao: Array.isArray(response.data.receitas[0].descricao)
+            ? response.data.receitas[0].descricao.join('').replace(/\s+/g, ' ') // Junta as partes e remove espaços extras
+            : response.data.receitas[0].descricao,
+        };
+        setReceita({ receitas: [receitaCorrigida] });
+      } else {
+        setReceita({ erro: 'Nenhuma receita encontrada.' });
+      }
     } catch (error) {
       console.error('Erro ao gerar receita:', error.response?.data || error.message);
       setReceita({ erro: 'Não foi possível gerar receita.' });
@@ -37,15 +49,14 @@ function FormIngredientes() {
 
   const handlegoBack = () => {
     navigation.goBack();
- };
-
+  };
 
   return (
     <AppLayouts hideNavbar={true}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <TouchableOpacity style={styles.backButton} onPress={handlegoBack}>
-                 <Ionicons name="chevron-back" size={28} color="#fff" />
-              </TouchableOpacity>
+          <Ionicons name="chevron-back" size={28} color="#fff" />
+        </TouchableOpacity>
         <Text style={styles.title}>Gerar Receita</Text>
         <Input
           style={styles.input}
@@ -63,13 +74,18 @@ function FormIngredientes() {
 
         {/* Exibição do retorno da API */}
         {loading && <ActivityIndicator size="large" color="#000" />}
-        {receita && receita.receitas && (
+        {receita && receita.erro && (
+          <Text style={styles.errorText}>{receita.erro}</Text>
+        )}
+        {receita && receita.receitas && receita.receitas[0] && (
           <View style={styles.resultContainer}>
             <Text style={styles.receitaTitulo}>{receita.receitas[0].titulo}</Text>
-            <Text>{receita.receitas[0].descricao}</Text>
+            <Text style={styles.receitaDescricao}>
+              {receita.receitas[0].descricao}
+            </Text>
           </View>
         )}
-      </ScrollView> 
+      </ScrollView>
     </AppLayouts>
   );
 }
@@ -86,11 +102,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-},
+  },
   title: {
     fontSize: 32,
-    textAlign:'center',
-    margin:20,
+    textAlign: 'center',
+    margin: 20,
     fontFamily: 'PlayfairDisplay-Regular',
     color: '#333',
     marginBottom: 30,
@@ -112,6 +128,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  receitaDescricao: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

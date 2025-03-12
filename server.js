@@ -1,8 +1,7 @@
 require("dotenv").config();
 const express = require("express");
-const axios = require("axios");
 const cors = require("cors");
-const Replicate = require("replicate"); // Importe a classe Replicate corretamente
+const Replicate = require("replicate");
 
 const app = express();
 const port = 5000;
@@ -10,9 +9,9 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
-const REPLICATE_API_KEY = process.env.REPLICATE_API_KEY;  // Defina sua chave API do Replicate aqui
+const REPLICATE_API_KEY = process.env.REPLICATE_API_KEY;
 
-console.log("Chave da API Replicate:", REPLICATE_API_KEY); // Log para debug
+console.log("Chave da API Replicate:", REPLICATE_API_KEY);
 
 // Instancia o cliente Replicate com a chave de API
 const replicateClient = new Replicate({
@@ -25,8 +24,21 @@ async function gerarReceita(ingredientes) {
     console.log("Ingredientes recebidos:", ingredientes);
 
     // Formata os ingredientes como uma string e cria um prompt claro
-    const inputText = `Crie uma receita usando os seguintes ingredientes: ${ingredientes.join(", ")}. 
-      Por favor, forneça uma resposta formatada com título, ingredientes e modo de preparo.`;
+    const inputText = `Crie uma receita detalhada utilizando os seguintes ingredientes: ${ingredientes.join(", ")}.  
+      Formate a resposta de maneira simples e bem estruturada, sem usar asteriscos, negrito ou caracteres especiais.  
+
+      Use este formato:  
+
+      Título: Nome da Receita  
+      Ingredientes:  
+      - Ingrediente 1  
+      - Ingrediente 2  
+
+      Modo de Preparo:  
+      1. Passo 1  
+      2. Passo 2  
+
+      Não use formatação Markdown ou caracteres especiais. Apenas texto simples e claro.`;
 
     // Solicitação ao modelo Meta LLaMA 3-8b-Instruct via Replicate
     const modelResponse = await replicateClient.run(
@@ -45,15 +57,15 @@ async function gerarReceita(ingredientes) {
     // Processamento da resposta para formatar como um objeto de receita
     const receitas = [{
       titulo: "Receita Gerada",
-      descricao: modelResponse.join(" "), // Junta todas as partes da resposta
+      descricao: modelResponse, // Ajuste conforme o formato da resposta
       ingredientes: ingredientes,
-      instrucoes: modelResponse, // Ajuste conforme necessário
+      instrucoes: modelResponse, // Ajuste conforme o formato da resposta
     }];
 
     return receitas;
   } catch (erro) {
     console.error("Erro ao acessar o modelo Replicate:", erro);
-    return [];
+    return { erro: "Erro ao gerar a receita. Por favor, tente novamente." };
   }
 }
 
