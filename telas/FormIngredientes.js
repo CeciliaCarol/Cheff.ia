@@ -28,15 +28,8 @@ function FormIngredientes() {
 
       console.log("Resposta da API:", response.data); // Debug
 
-      // Corrige a junção das partes do texto
       if (response.data.receitas && response.data.receitas[0]) {
-        const receitaCorrigida = {
-          ...response.data.receitas[0],
-          descricao: Array.isArray(response.data.receitas[0].descricao)
-            ? response.data.receitas[0].descricao.join('').replace(/\s+/g, ' ') // Junta as partes e remove espaços extras
-            : response.data.receitas[0].descricao,
-        };
-        setReceita({ receitas: [receitaCorrigida] });
+        setReceita({ receitas: response.data.receitas });
       } else {
         setReceita({ erro: 'Nenhuma receita encontrada.' });
       }
@@ -80,9 +73,30 @@ function FormIngredientes() {
         {receita && receita.receitas && receita.receitas[0] && (
           <View style={styles.resultContainer}>
             <Text style={styles.receitaTitulo}>{receita.receitas[0].titulo}</Text>
-            <Text style={styles.receitaDescricao}>
-              {receita.receitas[0].descricao}
-            </Text>
+
+            {/* Exibe os ingredientes */}
+            {receita.receitas[0].ingredientes.length > 0 && (
+              <>
+                <Text style={styles.subtitulo}>Ingredientes:</Text>
+                {receita.receitas[0].ingredientes.map((ingrediente, index) => (
+                  <Text key={index} style={styles.texto}>
+                    - {ingrediente}
+                  </Text>
+                ))}
+              </>
+            )}
+
+            {/* Exibe o modo de preparo */}
+            {receita.receitas[0].modoPreparo.length > 0 && (
+              <>
+                <Text style={styles.subtitulo}>Modo de Preparo:</Text>
+                {receita.receitas[0].modoPreparo.map((passo, index) => (
+                  <Text key={index} style={styles.texto}>
+                    {index + 1}. {passo}
+                  </Text>
+                ))}
+              </>
+            )}
           </View>
         )}
       </ScrollView>
@@ -128,10 +142,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'center',
   },
-  receitaDescricao: {
+  subtitulo: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  texto: {
     fontSize: 16,
     lineHeight: 24,
+    marginBottom: 5,
   },
   errorText: {
     color: 'red',

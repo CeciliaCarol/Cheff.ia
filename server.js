@@ -54,12 +54,28 @@ async function gerarReceita(ingredientes) {
 
     console.log("Resposta da API Replicate:", modelResponse);
 
-    // Processamento da resposta para formatar como um objeto de receita
+    // Junta as partes da resposta em uma única string
+    const respostaCompleta = modelResponse.join('');
+
+    // Extrai o título, ingredientes e modo de preparo da resposta
+    const tituloMatch = respostaCompleta.match(/Título:\s*(.*?)\n/);
+    const titulo = tituloMatch ? tituloMatch[1].trim() : "Receita Sem Título";
+
+    const ingredientesMatch = respostaCompleta.match(/Ingredientes:\s*([\s\S]*?)\nModo de Preparo:/);
+    const ingredientesFormatados = ingredientesMatch
+      ? ingredientesMatch[1].trim().split('\n').map((item) => item.trim()).filter((item) => item)
+      : [];
+
+    const modoPreparoMatch = respostaCompleta.match(/Modo de Preparo:\s*([\s\S]*)/);
+    const modoPreparoFormatado = modoPreparoMatch
+      ? modoPreparoMatch[1].trim().split('\n').map((item) => item.trim()).filter((item) => item)
+      : [];
+
+    // Retorna a receita formatada
     const receitas = [{
-      titulo: "Receita Gerada",
-      descricao: modelResponse, // Ajuste conforme o formato da resposta
-      ingredientes: ingredientes,
-      instrucoes: modelResponse, // Ajuste conforme o formato da resposta
+      titulo,
+      ingredientes: ingredientesFormatados,
+      modoPreparo: modoPreparoFormatado,
     }];
 
     return receitas;
